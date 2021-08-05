@@ -18,10 +18,7 @@ const UserSchema = new Schema({
 		required: true,
 	},
 	location: LocationSchema,
-	phone: {
-		type: String,
-		unique: true,
-	},
+	phone: String,
 	userType: {
 		type: Schema.Types.ObjectId,
 		ref: 'UserType',
