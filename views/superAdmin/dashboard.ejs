@@ -1,0 +1,259 @@
+<style>
+	a:link,
+	a:visited {
+		color: white;
+	}
+</style>
+<div class="restaurants">
+	<table class="table table-striped table-bordered table-hover caption-top text-center">
+		<caption>List of Restaurants</caption>
+		<thead class="table-dark">
+			<td>Name</td>
+			<td>Details</td>
+			<td>Deactivate / activate </td>
+		</thead>
+		<tbody>
+			<% restaurants.forEach(restaurant=> { %>
+				<tr id="<%= restaurant._id %>">
+					<td data-target="name">
+						<%= restaurant.name %>
+					</td>
+					<td>
+						<button class="btn btn-primary details" type="button" data-id="<%= restaurant._id %>">
+							<a href="./restaurant/<%=restaurant._id%>" style="text-decoration: none;">More
+								info</a></button>
+					</td>
+					<td>
+						<% if (restaurant.active===true) { %>
+							<button class="btn deactivateRestaurant" data-id="<%= restaurant._id %>">
+								<i class="fas fa-trash-alt fa-lg" style="color: #ea1601"></i>
+							</button>
+							<% } else { %>
+								<button class="btn activateRestaurant" data-id="<%= restaurant._id %>">
+									<i class="fas fa-check fa-lg" style="color: #64bc26"></i>
+								</button>
+								<% } %>
+					</td>
+				</tr>
+				<% }) %>
+		</tbody>
+	</table>
+	<div class="d-grid gap-2">
+		<button class="btn btn-primary addRestaurant" type="button">
+			<a href="./addRestaurant" style="text-decoration: none;">Add new Restaurant</a></button>
+	</div>
+</div><br />
+
+<div class="restaurant-types">
+	<table class="table table-striped table-bordered table-hover caption-top text-center">
+		<caption>
+			List of Restaurant types
+		</caption>
+		<thead class="table-dark">
+			<td style="width: 45%;">Name</td>
+			<td style="width: 35%;">Update</td>
+			<td style="width: 20%;">Deactivate / Activate</td>
+		</thead>
+		<tbody>
+			<% restaurantTypes.forEach((type)=> { %>
+				<tr id="<%= type._id %>">
+					<td data-target="name">
+						<%= type.name %>
+					</td>
+					<td>
+						<button class="btn update" type="button" data-id="<%= type._id %>" data-bs-toggle="modal"
+							data-bs-target="#updateModal" data-group="Restaurant">
+							<i class="fas fa-edit fa-lg"></i></button>
+					</td>
+					<td>
+						<% if (type.active===true) { %>
+							<button class="btn deactivate" data-id="<%= type._id %>" data-group="Restaurant">
+								<i class="fas fa-trash-alt fa-lg" style="color: #ea1601"></i>
+							</button>
+							<% } else { %>
+								<button class="btn activate" data-id="<%= type._id %>" data-group="Restaurant">
+									<i class="fas fa-check fa-lg" style="color: #64bc26"></i>
+								</button>
+								<% } %>
+					</td>
+				</tr>
+				<% }) %>
+		</tbody>
+	</table>
+	<div class="d-grid gap-2">
+		<button class="btn btn-primary addNew" type="button" data-bs-toggle="modal" data-bs-target="#addNewModal"
+			data-group="Restaurant">Add new Restaurant type</button>
+	</div>
+</div><br />
+
+<div class="menu-types">
+	<table class="table table-striped table-bordered table-hover caption-top text-center">
+		<caption>
+			List of Menu types
+		</caption>
+		<thead class="table-dark">
+			<td style="width: 45%;">Name</td>
+			<td style="width: 35%;">Update</td>
+			<td style="width: 20%;">Deactivate / Activate</td>
+		</thead>
+		<tbody>
+			<% menuTypes.forEach(type=> { %>
+				<tr id="<%= type._id %>">
+					<td data-target="name">
+						<%= type.name %>
+					</td>
+					<td><button class="btn update" type="button" data-id="<%= type._id %>" data-bs-toggle="modal"
+							data-bs-target="#updateModal" data-group="Menu">
+							<i class="fas fa-edit fa-lg"></i></button></td>
+					<td>
+						<% if (type.active===true) { %>
+							<button class="btn deactivate" data-id="<%= type._id %>" data-group="Menu">
+								<i class="fas fa-trash-alt fa-lg" style="color: #ea1601"></i>
+							</button>
+							<% } else { %>
+								<button class="btn activate" data-id="<%= type._id %>" data-group="Menu">
+									<i class="fas fa-check fa-lg" style="color: #64bc26"></i>
+								</button>
+								<% } %>
+					</td>
+				</tr>
+				<% }) %>
+		</tbody>
+	</table>
+	<div class="d-grid gap-2">
+		<button class="btn btn-primary addNew" type="button" data-bs-toggle="modal" data-bs-target="#addNewModal"
+			data-group="Menu">Add new Menu type</button>
+	</div>
+</div><br />
+
+<div class="payment-types">
+	<table class="table table-striped table-bordered table-hover caption-top text-center">
+		<caption>
+			List of Payment types
+		</caption>
+		<thead class="table-dark">
+			<td style="width: 45%;">Name</td>
+			<td style="width: 35%;">Update</td>
+			<td style="width: 20%;">Deactivate / Activate</td>
+		</thead>
+		<tbody>
+			<% paymentTypes.forEach(type=> { %>
+				<tr id="<%= type._id %>">
+					<td data-target="name">
+						<%= type.name %>
+					</td>
+					<td><button class="btn update" type="button" data-id="<%= type._id %>" data-bs-toggle="modal"
+							data-bs-target="#updateModal" data-group="Payment">
+							<i class="fas fa-edit fa-lg"></i></button></td>
+					<td>
+						<% if (type.active===true) { %>
+							<button class="btn deactivate" data-id="<%= type._id %>" data-group="Payment">
+								<i class="fas fa-trash-alt fa-lg" style="color: #ea1601"></i>
+							</button>
+							<% } else { %>
+								<button class="btn activate" data-id="<%= type._id %>" data-group="Payment">
+									<i class="fas fa-check fa-lg" style="color: #64bc26"></i>
+								</button>
+								<% } %>
+					</td>
+				</tr>
+				<% }) %>
+		</tbody>
+	</table>
+	<div class="d-grid gap-2">
+		<button class="btn btn-primary addNew" type="button" data-bs-toggle="modal" data-bs-target="#addNewModal"
+			data-group="Payment">Add new Payment type</button>
+	</div>
+</div><br />
+
+<div class="order-status-types">
+	<table class="table table-striped table-bordered table-hover caption-top text-center">
+		<caption>
+			List of Order status types
+		</caption>
+		<thead class="table-dark">
+			<td style="width: 45%;">Name</td>
+			<td style="width: 35%;">Update</td>
+			<td style="width: 20%;">Deactivate / Activate</td>
+		</thead>
+		<tbody>
+			<% orderStatusTypes.forEach(type=> { %>
+				<tr id="<%= type._id %>">
+					<td data-target="name">
+						<%= type.name %>
+					</td>
+					<td><button class="btn update" type="button" data-id="<%= type._id %>" data-bs-toggle="modal"
+							data-bs-target="#updateModal" data-group="OrderStatus">
+							<i class="fas fa-edit fa-lg"></i></button></td>
+					<td>
+						<% if (type.active===true) { %>
+							<button class="btn deactivate" data-id="<%= type._id %>" data-group="OrderStatus">
+								<i class="fas fa-trash-alt fa-lg" style="color: #ea1601"></i>
+							</button>
+							<% } else { %>
+								<button class="btn activate" data-id="<%= type._id %>" data-group="OrderStatus">
+									<i class="fas fa-check fa-lg" style="color: #64bc26"></i>
+								</button>
+								<% } %>
+					</td>
+				</tr>
+				<% }) %>
+		</tbody>
+	</table>
+	<div class="d-grid gap-2">
+		<button class="btn btn-primary addNew" type="button" data-bs-toggle="modal" data-bs-target="#addNewModal"
+			data-group="OrderStatus">Add new Order Status type</button>
+	</div>
+</div>
+
+<div class="modal fade" id="addNewModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3" style="display: none;">
+					<input type="text" class="form-control" id="group" />
+				</div>
+				<div class="mb-3">
+					<input type="text" class="form-control" placeholder="Name" id="name" name="name" />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="submitBtn" data-bs-dismiss="modal">
+					Submit
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3" style="display: none;">
+					<input type="text" class="form-control" id="updateGroup" />
+				</div>
+				<div class="mb-3" style="display: none;">
+					<input type="text" class="form-control" id="updateId" />
+				</div>
+				<div class="mb-3">
+					<label for="updateName">Name</label>
+					<input type="text" class="form-control" placeholder="Name" id="updateName" name="updateName" />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="updateBtn" data-bs-dismiss="modal">Update</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="/javascripts/superAdmin.js"></script>

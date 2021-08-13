@@ -1,0 +1,60 @@
+<% let id %>
+	<% if (typeof restaurantId !=='undefined' ) { %>
+		<% id=restaurantId %>
+			<% } %>
+
+				<div class="row mt-5">
+					<div class="col-md-6 m-auto">
+						<div class="card card-body">
+							<h1 class="text-center mb-3">
+								<i class="fas fa-user-plus"></i> Register
+							</h1>
+							<% include ./partials/messages %>
+								<form action="" method="POST" , id="form">
+									<div class="form-group mb-2">
+										<input type="text" id="fullName" name="fullName" class="form-control"
+											placeholder="Enter Full Name"
+											value="<%= typeof fullName != 'undefined' ? fullName : '' %>" />
+									</div>
+									<div class="form-group mb-2">
+										<input type="email" id="email" name="email" class="form-control"
+											placeholder="Enter Email"
+											value="<%= typeof email != 'undefined' ? email : '' %>" />
+									</div>
+									<div class="form-group mb-2">
+										<input type="password" id="password" name="password" class="form-control"
+											placeholder="Create Password"
+											value="<%= typeof password != 'undefined' ? password : '' %>" />
+									</div>
+									<div class="form-group mb-2">
+										<input type="password" id="password2" name="password2" class="form-control"
+											placeholder="Confirm Password"
+											value="<%= typeof password2 != 'undefined' ? password2 : '' %>" />
+									</div>
+									<button type="submit" class="btn btn-primary btn-block">
+										Register
+									</button>
+								</form>
+								<p class="lead mt-4">Have An Account? <a href="/login">Login</a></p>
+						</div>
+					</div>
+				</div>
+
+				<script>
+					$(document).ready(function () {
+
+						let currentUserType = '<%- currentUserType %>';
+						let restaurantId = '<%= id %>';
+
+						switch (currentUserType) {
+							case ('SuperAdmin'):
+								$('#form').attr('action', '/superAdmin/register/' + restaurantId);
+								break;
+							default:
+								$('#form').attr('action', '/customer/register');
+						}
+
+						alert($('#form').attr('action'));
+
+					})
+				</script>

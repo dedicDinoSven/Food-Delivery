@@ -7,32 +7,33 @@ const RestaurantSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	location: LocationSchema,
 	restaurantType: {
 		type: Schema.Types.ObjectId,
 		ref: 'RestaurantType',
 		required: true,
 	},
+    location: LocationSchema,
+    workingHoursStart: {
+        type: String,
+        required: true
+    },
+    workingHoursEnd: {
+        type: String,
+        required: true
+    },
     admin: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
-        unique: true
+        unique: true,
+        sparse: true
     },
     courier: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
-        unique: true
+        unique: true,
+        sparse: true
     },
-    workTime: {
-        type: String,
-        required: true,
-    },
-    deliveryDistance: {
-        type: Number,
-        required: true
-    },
+    deliveryDistance: Number,
     active: {
         type: Boolean,
         default: true
@@ -42,7 +43,6 @@ const RestaurantSchema = new Schema({
 
 RestaurantSchema.pre('save', function (next) {
 	this.name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
-
 	next();
 });
 

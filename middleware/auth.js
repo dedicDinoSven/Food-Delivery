@@ -5,6 +5,7 @@ const { cookieExtractor } = require('../helpers');
 
 const User = require('../models/User');
 const UserType = require('../models/UserType');
+const Restaurant = require('../models/Restaurant');
 
 passport.use(
 	'register',
@@ -20,19 +21,23 @@ passport.use(
 
 				const url = req.originalUrl;
 				let userType;
-
+				console.log(url);
 				switch (url) {
-					case '/superAdmin/register':
-						userType = await UserType.findOne({ name: 'Admin' });
+					case '/superAdmin/register/' + req.params.id:
+						userType = await UserType.findOne({ name: 'Admin' }).lean().exec();
 						break;
 					case '/admin/register':
-						userType = await UserType.findOne({ name: 'Courier' });
+						userType = await UserType.findOne({ name: 'Courier' })
+							.lean()
+							.exec();
 						break;
 					default:
-						userType = await UserType.findOne({ name: 'Customer' });
+						userType = await UserType.findOne({ name: 'Customer' })
+							.lean()
+							.exec();
 				}
 
-				const user = await User.findOne({ email });
+				const user = await User.findOne({ email }).lean().exec();
 				if (user) {
 					return done(null, false, { msg: 'Email already in use' });
 				}
@@ -44,6 +49,16 @@ passport.use(
 					userType: userType._id,
 				});
 				await newUser.save();
+
+				/* switch (userType.name) {
+					case 'Admin':
+						await Restaurant.findByIdAndUpdate(req.params.id, {
+							admin: user._id,
+						})
+							.lean()
+							.exec();
+						break;
+				}; */
 
 				return done(null, newUser, { msg: 'Account created' });
 			} catch (err) {
@@ -87,7 +102,6 @@ passport.use(
 		},
 		async (token, done) => {
 			try {
-				console.log(token.user)
 				return done(null, token.user);
 			} catch (err) {
 				done(err);

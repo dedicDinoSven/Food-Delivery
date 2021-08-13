@@ -9,10 +9,10 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const flash = require('connect-flash');
 const session = require('express-session');
-
-const db = require('./mongodb');
-
+require('./mongodb');
+const passport = require('passport');
 require('./middleware/auth');
+const access = require('./middleware/access');
 
 const adminRouter = require('./routes/admin');
 const courierRouter = require('./routes/courier');
@@ -45,7 +45,7 @@ app.use(flash());
 
 // global variables
 app.use((req, res, next) => {
-	res.locals.success_msg = req.flash('success_msg')
+	res.locals.success_msg = req.flash('success_msg');
 	res.locals.error_msg = req.flash('error_msg');
 	next();
 });
@@ -54,7 +54,12 @@ app.use('/admin', adminRouter);
 app.use('/courier', courierRouter);
 app.use('/customer', customerRouter);
 app.use('/', indexRouter);
-app.use('/superAdmin', superAdminRouter);
+app.use(
+	'/superAdmin',
+	passport.authenticate('jwt', { session: false }),
+	access.superAdmin,
+	superAdminRouter
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

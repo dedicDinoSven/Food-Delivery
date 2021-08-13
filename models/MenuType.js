@@ -10,7 +10,6 @@ const MenuTypeSchema = new Schema({
         type: Boolean,
         default: true
     }
-
 });
 
 const MenuType = mongoose.model('MenuType', MenuTypeSchema);

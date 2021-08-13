@@ -2,7 +2,7 @@ const passport = require('passport');
 const { validationResult } = require('express-validator');
 
 exports.getRegister = async (req, res) => {
-	res.render('./customer/register');
+	res.render('register', { currentUserType: undefined });
 };
 
 exports.postRegister = async (req, res, next) => {
@@ -20,7 +20,7 @@ exports.postRegister = async (req, res, next) => {
 				});
 
 				if (errorMessages.length > 0) {
-					return res.render('./customer/register', {
+					return res.render('register', {
 						errors: errorMessages,
 						fullName: fullName,
 						email: email,
@@ -36,7 +36,7 @@ exports.postRegister = async (req, res, next) => {
 				if (!user) {
 					errorMessages.push(info.msg);
 
-					return res.render('./customer/register', {
+					return res.render('register', {
 						errors: errorMessages,
 						fullName: fullName,
 						email: email,

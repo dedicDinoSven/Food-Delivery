@@ -1,0 +1,73 @@
+<style>
+	.mapboxgl-ctrl-geocoder {
+		width: 100% !important;
+		max-width: 600px !important;
+		box-shadow: none !important;
+	}
+
+	.form-control {
+		border: 1px solid #ced4da !important;
+	}
+</style>
+
+<div class="row mt-5">
+	<div class="col-md-7 m-auto">
+		<div class="card card-body">
+			<h1 class="text-center mb-3">
+				<i class="fas fa-utensils"></i> New Restaurant
+			</h1>
+			<% include ../partials/messages %>
+				<form action="/superAdmin/addRestaurant" method="POST">
+					<div class="form-group mb-2">
+						<input type="text" id="name" name="name" class="form-control"
+							placeholder="Enter Restaurant name" value="<%= typeof name != 'undefined' ? name : '' %>" />
+					</div>
+					<div class="form-group mb-2">
+						<select class="form-select" id="restaurantType" name="restaurantType">
+							<option disabled selected hidden>Select Restaurant type
+							</option>
+							<% for (let i=0; i < restaurantTypes.length; ++i) { %>
+								<option>
+									<%= restaurantTypes[i].name %>
+								</option>
+								<% } %>
+						</select>
+					</div>
+					<div class="mb-2 row">
+						<div class="form-group col">
+							<input type="text" id="workingHoursStart" name="workingHoursStart" class="form-control"
+								placeholder="Works from" onfocus="this.type='time'"
+								value="<%= typeof workingHoursStart != 'undefined' ? workingHoursStart : '' %>" />
+						</div>
+						<div class="form-group col">
+							<input type="text" id="workingHoursEnd" name="workingHoursEnd" class="form-control"
+								placeholder="Works to" onfocus="this.type='time'"
+								value="<%= typeof workingHoursEnd != 'undefined' ? workingHoursEnd : '' %>" />
+						</div>
+					</div>
+					<div id="locationInputs">
+						<div id="geocoder" class="form-group mb-2"></div>
+						<div id="hiddenInputFields" style="display: none;">
+							<input type="text" name="formattedAddress" id="formattedAddress" />
+							<input type="text" name="address" id="address" />
+							<input type="text" name="lng" id="lng" />
+							<input type="text" name="lat" id="lat" />
+						</div>
+						<div id="hiddenDiv" style="display: none;" class="form-group mb-2">
+							<input type="text" id="streetNum" name="streetNum" class="form-control"
+								placeholder="... and street number" />
+						</div>
+						<p>Or set location on the map</p>
+					</div>
+						<div id="formMap" class="mb-2" style="width: 100%; height: 360px;"></div>
+					<div class="d-grid gap-2">
+						<button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+							Submit
+						</button>
+					</div>
+				</form>
+		</div>
+	</div>
+</div>
+
+<script src="/javascripts/geocode.js"></script>

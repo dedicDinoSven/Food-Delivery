@@ -2,38 +2,31 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const LocationSchema = new Schema({
+	lat:{ 
+		type: String,
+		required: true
+	 },
+	lng: {
+		type: String,
+		required: true
+	},
+	formattedAddress: {
+		type: String,
+		required: true
+	},
 	address: {
 		type: String,
-		required: true,
+		required: true
 	},
-	city: {
+	streetNum: {
 		type: String,
-		required: true,
+		required: true
 	},
-	zipCode: {
-		type: String,
-		required: true,
+	createdAt: {
+		type: Date,
+		default: Date.now,
 	},
-	country: {
-		type: String,
-		required: true,
-	},
-	lat: {
-		type: Number,
-		required: true,
-	},
-	lng: {
-		type: Number,
-		required: true,
-	},
-});
-
-LocationSchema.pre('save', function (next) {
-	this.address = this.address.charAt(0).toUpperCase() + this.address.slice(1);
-	this.city = this.city.charAt(0).toUpperCase() + this.city.slice(1);
-	this.country = this.country.charAt(0).toUpperCase() + this.country.slice(1);
-
-	next();
+	
 });
 
 LocationSchema.method('toJSON', function () {
