@@ -1,9 +1,11 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
+let admin = require('../controllers/admin');
+const { registrationValidator } = require('../middleware/authValidators');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.get('/register/:id', admin.getCourierRegister);
+
+router.post('/register/:id', registrationValidator, admin.postCourierRegister);
+
 
 module.exports = router;

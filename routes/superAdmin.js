@@ -62,6 +62,6 @@ router.put('/activateRestaurant/:id', superAdmin.activateRestaurant);
 
 router.get('/register/:id', superAdmin.getAdminRegister);
 
-router.post('/register/:id', superAdmin.postAdminRegister);
+router.post('/register/:id', registrationValidator, superAdmin.postAdminRegister);
 
 module.exports = router;
