@@ -50,6 +50,9 @@
 							case ('SuperAdmin'):
 								$('#form').attr('action', '/superAdmin/register/' + restaurantId);
 								break;
+							case ('Admin'):
+							$('#form').attr('action', '/admin/register/' + restaurantId);
+								break;
 							default:
 								$('#form').attr('action', '/customer/register');
 						}

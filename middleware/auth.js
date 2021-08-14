@@ -26,7 +26,7 @@ passport.use(
 					case '/superAdmin/register/' + req.params.id:
 						userType = await UserType.findOne({ name: 'Admin' }).lean().exec();
 						break;
-					case '/admin/register':
+					case '/admin/register/' + req.params.id:
 						userType = await UserType.findOne({ name: 'Courier' })
 							.lean()
 							.exec();
@@ -49,16 +49,6 @@ passport.use(
 					userType: userType._id,
 				});
 				await newUser.save();
-
-				/* switch (userType.name) {
-					case 'Admin':
-						await Restaurant.findByIdAndUpdate(req.params.id, {
-							admin: user._id,
-						})
-							.lean()
-							.exec();
-						break;
-				}; */
 
 				return done(null, newUser, { msg: 'Account created' });
 			} catch (err) {

@@ -37,7 +37,7 @@ app.use(
 	session({
 		secret: 'secret',
 		resave: true,
-		saveUninitialized: true,
+		saveUninitialized: true
 	})
 );
 
@@ -50,7 +50,12 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use('/admin', adminRouter);
+app.use(
+	'/admin',
+	passport.authenticate('jwt', { session: false }),
+	access.admin,
+	adminRouter
+);
 app.use('/courier', courierRouter);
 app.use('/customer', customerRouter);
 app.use('/', indexRouter);
