@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema({
+	menu: {
+		type: Schema.Types.ObjectId,
+		ref: 'MenuType',
+		required: true,
+	},
 	name: {
 		type: String,
 		required: true,
@@ -17,15 +22,16 @@ const ProductSchema = new Schema({
 	photoUrl: {
 		type: String,
 		unique: true,
+		required: true
 	},
-	menu: {
-		type: Schema.Type.ObjectId,
-		ref: 'Menu',
-		required: true,
-	},
+	restaurant: {
+        type: Schema.Types.ObjectId,
+        ref: "Restaurant",
+        required: true
+    },
 	offers: [
 		{
-			type: Schema.Type.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'SpecialOffer',
 		},
 	],

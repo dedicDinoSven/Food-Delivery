@@ -20,13 +20,12 @@ const SpecialOfferSchema = new Schema({
 	},
 	products: [
 		{
-			type: Schema.Type.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'Product',
-			unique: true,
 		},
 	],
 	restaurant: {
-		type: Schema.Type.ObjectId,
+		type: Schema.Types.ObjectId,
 		ref: 'Restaurant',
 		required: true,
 	},
@@ -39,12 +38,12 @@ const SpecialOfferSchema = new Schema({
 		default: Date.now,
 	},
 	timeFrom: {
-		type: Date,
-		default: Date.now,
+		type: String,
+		required: true
 	},
 	timeTo: {
-		type: Date,
-		default: Date.now,
+		type: String,
+		required: true,
 	},
 	active: {
 		type: Boolean,

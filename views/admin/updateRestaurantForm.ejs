@@ -1,0 +1,60 @@
+<div class="modal fade" id="updateRestaurantModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update <%= restaurant.name %>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="id" style="display: none;" />
+                <div class="mb-2 form-group form-floating">
+                    <input type="text" class="form-control" id="name" />
+                    <label for="name">Restaurant name</label>
+                </div>
+                <div class="form-group form-floating mb-2">
+                    <select class="form-select" id="restaurantType">
+                        <% for (let i=0; i < restaurantTypes.length; ++i) { %>
+                            <option>
+                                <%= restaurantTypes[i].name %>
+                            </option>
+                            <% } %>
+                    </select>
+                    <label for="restaurantType">Restaurant type</label>
+                </div>
+                <div class="row mb-2">
+                    <div class="col form-group form-floating">
+                        <input type="time" class="form-control" id="workingHoursStart" />
+                        <label for="workingHoursStart" style="margin-left: 11px;">Works from</label>
+                    </div>
+                    <div class="col form-group form-floating">
+                        <input type="time" class="form-control" id="workingHoursEnd" />
+                        <label for="workingHoursEnd" style="margin-left: 11px;">to</label>
+                    </div>
+                </div>
+                <div class="form-group form-floating mb-2">
+                    <input type="text" class="form-control" id="deliveryDistance" />
+                    <label for="deliveryDistance">Delivery distance (kilometers)</label>
+                </div>
+                <div id="locationInputs">
+                    <div id="geocoder" class="mb-2"></div>
+                    <div id="hiddenInputFields" style="display: none;">
+                        <input type="text" id="address" />
+                        <input type="text" id="lng" />
+                        <input type="text" id="lat" />
+                    </div>
+                    <div class="form-group form-floating mb-2">
+                        <input type="text" id="streetNum" class="form-control" />
+                        <label for="streetNum">Enter street number</label>
+                    </div>
+                    <p>Or change location on the map</p>
+                </div>
+                <div id="formMap" class="mb-2" style="width: 100%; height: 360px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-block" id="submitUpdate" data-bs-dismiss="modal">Submit
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>

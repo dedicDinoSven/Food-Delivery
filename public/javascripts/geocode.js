@@ -28,8 +28,7 @@ const marker = new mapboxgl.Marker({ draggable: true });
 geocoder.on('result', (e) => {
 	marker.setLngLat(e.result.center).addTo(formMap);
 	
-	$('#formattedAddress').val(e.result.place_name);
-	$('#address').val(e.result.text);
+	$('#address').val(e.result.place_name);
 	$('#lng').val(e.result.center[0]);
 	$('#lat').val(e.result.center[1]);
 	$('#hiddenDiv').fadeIn(1000);
@@ -37,7 +36,6 @@ geocoder.on('result', (e) => {
 
 geocoder.on('clear', () => {
 	marker.setLngLat([0, 0]);
-	$('#formattedAddress').val('');
 	$('#address').val('');
 	$('#lng').val('');
 	$('#lat').val('');

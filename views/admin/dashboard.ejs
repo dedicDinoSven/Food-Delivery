@@ -1,0 +1,135 @@
+<style>
+    .mapboxgl-ctrl-geocoder {
+        width: 100% !important;
+        max-width: 600px !important;
+        box-shadow: none !important;
+    }
+
+    .form-control {
+        border: 1px solid #ced4da !important;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 15vw;
+        object-fit: cover;
+    }
+</style>
+
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <h2>Info</h2>
+        <ul class="list-group list-group-flush mb-2" id="<%= restaurant._id %>">
+            <li class="list-group-item"><strong>Name:</strong>
+                <span data-target="name">
+                    <%= restaurant.name %>
+                </span>
+            </li>
+            <li class="list-group-item"><strong>Type of restaurant:</strong>
+                <span data-target="restaurantType">
+                    <%= restaurant.restaurantType.name %>
+                </span>
+            </li>
+            <li class="list-group-item"><strong>Working hours:</strong>
+                <span data-target="workingHoursStart">
+                    <%= restaurant.workingHoursStart%>
+                </span> to <span data-target="workingHoursEnd">
+                    <%= restaurant.workingHoursEnd %>
+                </span>
+            </li>
+            <li class="list-group-item"><strong>Address:</strong>
+                <span data-target="address">
+                    <%= restaurant.location.address %>
+                </span>
+            </li>
+            <li class="list-group-item"><strong>Street number:</strong>
+                <span data-target="streetNum">
+                    <%= restaurant.location.streetNum%>
+                </span>
+            </li>
+            <% if (typeof restaurant.deliveryDistance !=='undefined' ) { %>
+                <li class="list-group-item"><strong>Delivery distance (kilometers):</strong>
+                    <span data-target="deliveryDistance">
+                        <%= restaurant.deliveryDistance %>
+                    </span>
+                </li>
+                <% } %>
+                    <% if (typeof restaurant.courier !=='undefined' ) { %>
+                        <li class="list-group-item"><strong>Courier:</strong>
+                            <%= restaurant.courier.fullName %>
+                        </li>
+                        <li class="list-group-item"><strong>Courier email:</strong>
+                            <%= restaurant.courier.email %>
+                        </li>
+                        <li class="list-group-item"><strong>Courier phone number:</strong>
+                            <%= restaurant.courier.phoneNumber %>
+                        </li>
+                        <% } %>
+        </ul>
+        <div id="buttonContainer">
+            <button class="btn btn-primary mb-2" id="updateRestaurant" type="button" data-id="<%= restaurant._id %>"
+                data-bs-toggle="modal" data-bs-target="#updateRestaurantModal">Update info</button>
+            <% if (typeof restaurant.courier==='undefined' ) { %>
+                <button class="btn btn-secondary" id="registerCourier"><a
+                        href="/admin/register/<%= restaurant._id %>">Add
+                        courier</a></button>
+                <% } %>
+                    <button class="btn btn-primary mb-2" id="addProduct" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addProductModal">New product</button>
+                    <a href="./addSpecialOffer/<%= restaurant._id %>" class="btn btn-primary mb-2 addSpecialOffer"
+                        type="button" style="text-decoration: none;">New Special Offer</a>
+        </div>
+    </div>
+    <div class=" col-md-6 m-auto">
+        <div id="map" style="width: 100%; height: 350px; border-radius: 5px;"></div>
+    </div>
+</div>
+
+<div id="products" class="mt-5">
+    <h2 class="text-center mb-2">Products</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <% products.forEach(product=> { %>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="<%= product.photoUrl %>" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= product.name %>
+                        </h5>
+                        <p class="card-subtitle text-muted">
+                            <%= product.price %> KM
+                        </p>
+                        <p class="card-text">
+                            <%= product.description %>
+                        </p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <% if (product.active===true) { %>
+                            <button class="btn btn-primary deactivateProduct" data-id="<%= product._id %>">
+                                Deactivate product
+                            </button>
+                            <% } else { %>
+                                <button class="btn btn-primary activateProduct" data-id="<%= product._id %>">
+                                    Activate product
+                                </button>
+                                <% } %>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+    </div>
+</div>
+
+<span id="hiddenLng" hidden>
+    <%= JSON.stringify(restaurant.location.lng) %>
+</span>
+<span id="hiddenLat" hidden>
+    <%= JSON.stringify(restaurant.location.lat) %>
+</span>
+
+<% include ./updateRestaurantForm %>
+    <% include ./addProductForm %>
+        
+            <script src="/javascripts/geocode.js"></script>
+            <script src="/javascripts/initializeMap.js"></script>
+            <script src="/javascripts/admin.js"></script>

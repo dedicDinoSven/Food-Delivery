@@ -1,0 +1,50 @@
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <div class="card card-body">
+            <h1 class="text-center mb-3">
+                New Special Offer
+            </h1>
+            <form method="POST" action="/admin/addSpecialOffer/<%=restaurant._id%>" enctype="multipart/form-data">
+                <div class="form-group mb-2">
+                    <input type="text" id="offerName" name="offerName" class="form-control"
+                        placeholder="Enter Offer name" />
+                </div>
+                <div class="form-group mb-2">
+                    <textarea rows="3" id="offerDesc" name="offerDesc" class="form-control"
+                        placeholder="Enter Offer description"></textarea>
+                </div>
+                <div class="row mb-2">
+                    <div class="form-group col">
+                        <input type="text" id="offerDateFrom" name="offerDateFrom" class="form-control"
+                            placeholder="Valid from (Date)" onfocus="this.type='date'" />
+                    </div>
+                    <div class="form-group col">
+                        <input type="text" id="offerDateTo" name="offerDateTo" class="form-control"
+                            placeholder="Valid to (Date)" onfocus="this.type='date'" />
+                    </div>
+                </div>
+                <div class="mb-2 row">
+                    <div class="form-group col">
+                        <input type="text" id="offerTimeFrom" name="offerTimeFrom" class="form-control"
+                            placeholder="Valid from (Hours)" onfocus="this.type='time'" />
+                    </div>
+                    <div class="form-group col">
+                        <input type="text" id="offerTimeTo" name="offerTimeTo" class="form-control"
+                            placeholder="Valid to (Hours)" onfocus="this.type='time'" />
+                    </div>
+                </div>
+                <div class="mb-2 row">
+                    <div class="form-group col">
+                        <input type="text" id="offerPrice" name="offerPrice" class="form-control"
+                            placeholder="Enter Offer price (BAM)" />
+                    </div>
+                    <div class="form-group col">
+                        <input type="file" accept="image/*" id="offerPhoto" name="offerPhoto" class=" form-control"
+                            placeholder="Add Offer photo" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

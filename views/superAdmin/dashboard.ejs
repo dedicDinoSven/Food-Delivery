@@ -39,8 +39,8 @@
 		</tbody>
 	</table>
 	<div class="d-grid gap-2">
-		<button class="btn btn-primary addRestaurant" type="button">
-			<a href="./addRestaurant" style="text-decoration: none;">Add new Restaurant</a></button>
+		<a href="./addRestaurant" class="btn btn-primary addRestaurant" type="button" style="text-decoration: none;">Add
+			new Restaurant</a>
 	</div>
 </div><br />
 
@@ -206,54 +206,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="addNewModal" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title"></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="modal-body">
-				<div class="mb-3" style="display: none;">
-					<input type="text" class="form-control" id="group" />
-				</div>
-				<div class="mb-3">
-					<input type="text" class="form-control" placeholder="Name" id="name" name="name" />
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" id="submitBtn" data-bs-dismiss="modal">
-					Submit
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
+<% include ./addNewType %>
+	<% include ./updateType %>
 
-<div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title"></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="modal-body">
-				<div class="mb-3" style="display: none;">
-					<input type="text" class="form-control" id="updateGroup" />
-				</div>
-				<div class="mb-3" style="display: none;">
-					<input type="text" class="form-control" id="updateId" />
-				</div>
-				<div class="mb-3">
-					<label for="updateName">Name</label>
-					<input type="text" class="form-control" placeholder="Name" id="updateName" name="updateName" />
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" id="updateBtn" data-bs-dismiss="modal">Update</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<script src="/javascripts/superAdmin.js"></script>
+		<script src="/javascripts/superAdmin.js"></script>

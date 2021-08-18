@@ -10,10 +10,6 @@ const LocationSchema = new Schema({
 		type: String,
 		required: true
 	},
-	formattedAddress: {
-		type: String,
-		required: true
-	},
 	address: {
 		type: String,
 		required: true

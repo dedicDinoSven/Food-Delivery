@@ -10,19 +10,23 @@ const Restaurant = require('../models/Restaurant');
 const UserType = require('../models/UserType');
 
 exports.getDashboard = async (req, res) => {
-	const restaurants = await Restaurant.find().lean().exec();
-	const restaurantTypes = await RestaurantType.find().lean().exec();
-	const menuTypes = await MenuType.find().lean().exec();
-	const paymentTypes = await PaymentType.find().lean().exec();
-	const orderStatusTypes = await OrderStatus.find().lean().exec();
+	try {
+		const restaurants = await Restaurant.find().lean().exec();
+		const restaurantTypes = await RestaurantType.find().lean().exec();
+		const menuTypes = await MenuType.find().lean().exec();
+		const paymentTypes = await PaymentType.find().lean().exec();
+		const orderStatusTypes = await OrderStatus.find().lean().exec();
 
-	res.render('./superAdmin/dashboard', {
-		restaurants,
-		restaurantTypes,
-		menuTypes,
-		paymentTypes,
-		orderStatusTypes
-	});
+		res.render('./superAdmin/dashboard', {
+			restaurants,
+			restaurantTypes,
+			menuTypes,
+			paymentTypes,
+			orderStatusTypes
+		});
+	} catch (err) {
+		res.status(404).send(err);
+	}
 };
 
 // RestaurantType methods
@@ -299,11 +303,9 @@ exports.postRestaurantForm = async (req, res) => {
 		const location = new Location({
 			lat: req.body.lat,
 			lng: req.body.lng,
-			formattedAddress: req.body.formattedAddress,
 			address: req.body.address,
 			streetNum: req.body.streetNum
 		});
-
 		await location.save();
 
 		const restaurant = new Restaurant({
@@ -313,9 +315,8 @@ exports.postRestaurantForm = async (req, res) => {
 			workingHoursStart: req.body.workingHoursStart,
 			workingHoursEnd: req.body.workingHoursEnd
 		});
-
 		await restaurant.save();
-		console.log(restaurantType);
+
 		res.redirect('/superAdmin/dashboard');
 	} catch (err) {
 		console.log(err);
@@ -327,7 +328,7 @@ exports.getRestaurantById = async (req, res) => {
 	try {
 		const restaurant = await Restaurant.findById(req.params.id)
 			.populate('restaurantType', '-__v')
-			.populate('admin', '-__v')
+			.populate('admin', '-__v -password')
 			.lean()
 			.exec();
 
@@ -356,7 +357,6 @@ exports.updateRestaurant = async (req, res) => {
 			{
 				lat: req.body.lat,
 				lng: req.body.lng,
-				formattedAddress: req.body.formattedAddress,
 				address: req.body.address,
 				streetNum: req.body.streetNum
 			},
@@ -419,15 +419,20 @@ exports.activateRestaurant = async (req, res) => {
 };
 
 exports.getAdminRegister = async (req, res) => {
-	const restaurant = await Restaurant.findById(req.params.id).lean().exec();
-	const currentUserType = await UserType.findById(req.user.userType, 'name')
-		.lean()
-		.exec();
-	console.log(currentUserType);
-	res.render('register', {
-		restaurantId: restaurant._id,
-		currentUserType: currentUserType.name
-	});
+	try {
+		const restaurant = await Restaurant.findById(req.params.id).lean().exec();
+
+		const currentUserType = await UserType.findById(req.user.userType, 'name')
+			.lean()
+			.exec();
+
+		res.render('register', {
+			restaurantId: restaurant._id,
+			currentUserType: currentUserType.name
+		});
+	} catch (err) {
+		res.status(404).send(err);
+	}
 };
 
 exports.postAdminRegister = async (req, res, next) => {
@@ -482,3 +487,4 @@ exports.postAdminRegister = async (req, res, next) => {
 		}
 	)(req, res, next);
 };
+
