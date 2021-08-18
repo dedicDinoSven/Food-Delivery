@@ -171,6 +171,30 @@ exports.addProduct = async (req, res) => {
 	}
 };
 
+exports.updateProduct = async (req, res) => {
+	try {
+		const menu = await MenuType.findOne({ name: req.body.menu }).lean().exec();
+
+		await Product.findByIdAndUpdate(
+			req.params.id,
+			{
+				menu: menu._id,
+				name: req.body.name,
+				description: req.body.description,
+				price: req.body.price
+			},
+			{ new: true }
+		)
+			.lean()
+			.exec();
+
+		res.redirect(303, 'back');
+	} catch (err) {
+		console.log(err);
+		res.status(404).send(err);
+	}
+};
+
 exports.deactivateProduct = async (req, res) => {
 	try {
 		await Product.findByIdAndUpdate(

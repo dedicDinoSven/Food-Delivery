@@ -1,0 +1,41 @@
+<div class="modal fade" id="updateProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update product
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="productId" style="display: none;" />
+                <div class="form-group form-floating mb-2">
+                    <select class="form-select" id="updateProductMenu">
+                        <% menuTypes.forEach(type=> { %>
+                            <option>
+                                <%= type.name %>
+                            </option>
+                            <% }) %>
+                    </select>
+                    <label for="updateProductMenu">Product menu</label>
+                </div>
+                <div class="form-group form-floating mb-2">
+                    <input type="text" id="updateProductName" class="form-control" />
+                    <label for="updateProductName">Product name</label>
+                </div>
+                <div class="form-group form-floating mb-2">
+                    <textarea rows="3" id="updateProductDesc" class="form-control"></textarea>
+                    <label for="updateProductDesc">Product description</label>
+                </div>
+                <div class="form-group form-floating mb-2">
+                    <input type="text" id="updateProductPrice" class="form-control" />
+                    <label for="updateProductPrice">Product price (BAM)</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitProductUpdate" class="btn btn-primary btn-block"
+                    data-bs-dismiss="modal">Submit</button>
+            </div>
+
+        </div>
+    </div>
+</div>

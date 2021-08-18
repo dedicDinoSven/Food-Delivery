@@ -14,6 +14,8 @@ router.post('/register/:id', registrationValidator, admin.postCourierRegister);
 
 router.post('/addProduct/:id', parser.single('productPhoto'), admin.addProduct);
 
+router.put('/updateProduct/:id', admin.updateProduct);
+
 router.put('/deactivateProduct/:id', admin.deactivateProduct);
 
 router.put('/activateProduct/:id', admin.activateProduct);

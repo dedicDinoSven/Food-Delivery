@@ -89,28 +89,36 @@
     <h2 class="text-center mb-2">Products</h2>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <% products.forEach(product=> { %>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="<%= product.photoUrl %>" class="card-img-top" alt="...">
+            <div class="col" >
+                <div class="card h-100" id="<%= product._id %>">
+                    <div class="card-header" >
+                        <p data-target="menu">
+                            <%= product.menu.name %>
+                        </p>
+                    </div>
+                    <img src="<%= product.photoUrl %>" class="card-img-top">
                     <div class="card-body">
-                        <h5 class="card-title">
+                        <h5 class="card-title" data-target="productName">
                             <%= product.name %>
                         </h5>
-                        <p class="card-subtitle text-muted">
-                            <%= product.price %> KM
+                        <p class="card-subtitle text-muted" >
+                            <span data-target="productPrice"><%= product.price %></span> KM
                         </p>
-                        <p class="card-text">
+                        <p class="card-text" data-target="productDesc">
                             <%= product.description %>
                         </p>
                     </div>
                     <div class="card-footer text-center">
+                        <button class="btn btn-primary mb-2 updateProduct" type="button"
+                            data-id="<%= product._id %>" data-bs-toggle="modal"
+                            data-bs-target="#updateProductModal">Update</button>
                         <% if (product.active===true) { %>
                             <button class="btn btn-primary deactivateProduct" data-id="<%= product._id %>">
-                                Deactivate product
+                                Deactivate
                             </button>
                             <% } else { %>
                                 <button class="btn btn-primary activateProduct" data-id="<%= product._id %>">
-                                    Activate product
+                                    Activate
                                 </button>
                                 <% } %>
                     </div>
@@ -129,6 +137,7 @@
 
 <% include ./updateRestaurantForm %>
     <% include ./addProductForm %>
+        <% include ./updateProductForm %>
         
             <script src="/javascripts/geocode.js"></script>
             <script src="/javascripts/initializeMap.js"></script>

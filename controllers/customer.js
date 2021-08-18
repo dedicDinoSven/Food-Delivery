@@ -53,3 +53,11 @@ exports.postRegister = async (req, res, next) => {
 		}
 	)(req, res, next);
 };
+
+exports.getDashboard = async (req, res, next) => {
+	try {
+		res.render('./customer/dashboard', { user: req.user });
+	} catch (err) {
+		res.status(404).send(err);
+	}
+};

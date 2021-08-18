@@ -63,7 +63,7 @@ exports.postLogin = async (req, res, next) => {
 						redirectUrl = './courier/dashboard';
 						break;
 					default:
-						redirectUrl = '/dashboard';
+						redirectUrl = './customer/dashboard';
 				}
 
 				return res.redirect(redirectUrl);

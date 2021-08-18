@@ -57,7 +57,12 @@ app.use(
 	adminRouter
 );
 app.use('/courier', courierRouter);
-app.use('/customer', customerRouter);
+app.use(
+	'/customer',
+	passport.authenticate('jwt', { session: false }),
+	access.customer,
+	customerRouter
+);
 app.use('/', indexRouter);
 app.use(
 	'/superAdmin',

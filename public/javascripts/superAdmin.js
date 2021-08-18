@@ -89,7 +89,7 @@ $('.deactivateRestaurant').click(function () {
 			location.reload();
 		}
 	});
-})
+});
 
 $('.activateRestaurant').click(function () {
 	let id = $(this).data('id');
@@ -102,4 +102,4 @@ $('.activateRestaurant').click(function () {
 			location.reload();
 		}
 	});
-})
+});

@@ -7,4 +7,5 @@ router.get('/register', customer.getRegister);
 
 router.post('/register', registrationValidator, customer.postRegister);
 
+router.get('/dashboard', customer.getDashboard);
 module.exports = router;
