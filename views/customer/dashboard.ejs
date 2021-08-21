@@ -1,1 +1,143 @@
+<style>
+    .mapboxgl-ctrl-geocoder {
+        width: 100% !important;
+        max-width: 600px !important;
+        box-shadow: none !important;
+    }
 
+    .form-control {
+        border: 1px solid #ced4da !important;
+    }
+</style>
+<div>
+    <button id="productSearch" type="button" class="btn btn-info">Search for products</button>
+    <form method="post" action="/customer/productSearch" style="display: none">
+        <div class="form-group">
+            <input class="form-control" type="text" id="searchProduct" name="searchProduct" placeholder="Search by Product name">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</div>
+<div>
+    <button id="productTypeSearch" type="button" class="btn btn-info">Search for products by type</button>
+    <form method="post" action="/customer/productTypeSearch" style=" display: none">
+        <div class="form-group">
+            <input class="form-control" type="text" id="searchProductType" name="searchProductType" placeholder="Search by Product type">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</div>
+
+
+<% if (typeof user.location==='undefined' ) { %>
+    <div id="locationSelect" class="row mb-2 mt-5">
+        <form method="POST" action="/customer/setLocation/<%= user._id %>">
+            <div class="col" id="locationInputs">
+                <div id="geocoder" class="form-group mb-2"></div>
+                <div id="hiddenInputFields" style="display: none;">
+                    <input type="text" name="address" id="address" />
+                    <input type="text" name="lng" id="lng" />
+                    <input type="text" name="lat" id="lat" />
+                </div>
+                <div id="hiddenDiv" style="display: none;" class="form-group mb-2">
+                    <input type="text" id="streetNum" name="streetNum" class="form-control mb-2"
+                        placeholder="... and street number" />
+                    <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                        Submit
+                    </button>
+                </div>
+                <p>Or set location on the map</p>
+            </div>
+            <div class="col" id="formMap" style="width: 100%; height: 360px; border-radius: 5px;"></div>
+        </form>
+    </div>
+    <% } else { %>
+        <div id="customerMap" class="row mt-5 mb-2" style="width: 100%; height: 360px; border-radius: 5px;">
+        </div>
+        <% } %>
+
+            <script src="/javascripts/geocode.js"></script>
+            <script src="/javascripts/airDistance.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#productSearch').click(function () {
+                        $(this).next().toggle();
+                    });
+                    $('#productTypeSearch').click(function () {
+                        $(this).next().toggle();
+                    });
+                });
+
+                let lng = JSON.parse('<%- JSON.stringify(user.location.lng) %>');
+                let lat = JSON.parse('<%- JSON.stringify(user.location.lat) %>');
+
+                const map = new mapboxgl.Map({
+                    container: 'customerMap',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    zoom: 14,
+                    center: [lng, lat]
+                });
+
+                map.addControl(new mapboxgl.FullscreenControl());
+                map.addControl(new mapboxgl.NavigationControl());
+
+                let restaurants = JSON.parse('<%- JSON.stringify(restaurants) %>');
+
+                let deliveryDistances = [];
+                let distancesCustomerRestaurant = [];
+
+                restaurants.forEach(restaurant => {
+                    let restaurantLng = restaurant.location.lng;
+                    let restaurantLat = restaurant.location.lat;
+                    deliveryDistances.push(restaurant.deliveryDistance);
+                    distancesCustomerRestaurant.push(getDistanceFromLatLonInKm(lat, lng, restaurantLat, restaurantLng).toFixed(2));
+                });
+
+                let availableRestaurants = [];
+                for (let i = 0; i < restaurants.length; ++i) {
+                    if (distancesCustomerRestaurant[i] <= deliveryDistances[i])
+                        availableRestaurants.push(restaurants[i]);
+                }
+
+                const markers = availableRestaurants.map(restaurant => {
+                    return {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [
+                                restaurant.location.lng,
+                                restaurant.location.lat
+                            ]
+                        },
+                        properties: {
+                            title: restaurant.name,
+                            icon: 'restaurant'
+                        }
+                    }
+                });
+                loadMap(markers);
+
+                function loadMap(markers) {
+                    map.on('load', function () {
+                        map.addLayer({
+                            id: 'places',
+                            type: 'symbol',
+                            source: {
+                                type: 'geojson',
+                                data: {
+                                    type: 'FeatureCollection',
+                                    features: markers
+                                }
+                            },
+                            layout: {
+                                'icon-image': '{icon}-15',
+                                'icon-size': 1,
+                                'text-field': '{title}',
+                                'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+                                'text-offset': [0, 0.9],
+                                'text-anchor': 'top'
+                            }
+                        });
+                    });
+                }
+            </script>
