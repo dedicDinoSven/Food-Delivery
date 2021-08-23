@@ -19,4 +19,14 @@ router.post('/productTypeSearch', customer.productTypeSearch);
 
 router.get('/productTypeSearch/:result?', customer.productTypeSearchResult);
 
+router.get('/restaurant/:id', customer.getRestaurant);
+
+router.post('/basket/:id', customer.addToBasket);
+
+router.get('/basket', customer.getBasket);
+
+router.put('/basket/:id', customer.removeFromBasket);
+
+router.post('/order', customer.postOrder);
+
 module.exports = router;

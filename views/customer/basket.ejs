@@ -1,0 +1,88 @@
+<h2 class="mt-5 mb-2">Order</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Full price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% order.forEach(orderProduct=> { %>
+            <tr>
+                <td>
+                    <%= orderProduct.product.name %>
+                </td>
+                <td>
+                    <%= orderProduct.price %> KM
+                </td>
+                <td>
+                    <%= orderProduct.quantity %>
+                </td>
+                <td>
+                    <%= orderProduct.fullPrice %> KM
+                </td>
+                <td><button class="btn removeFromBasket" data-id="<%= orderProduct._id %>">
+                        <i class="fas fa-trash-alt fa-lg" style="color: #ea1601"></i>
+                    </button></td>
+            </tr>
+            <% }) %>
+    </tbody>
+</table>
+<h3 id="total">Total:</h3>
+<form action="/customer/order" method="POST">
+    <div class="form-group mb-2">
+        <textarea class="form-control" id="comment" name="comment" rows="3"
+            placeholder="If you have any additional requirements enter them here."></textarea>
+    </div>
+    <div class="form-group mb-2">
+        <input type="text" id="orderTime" name="orderTime" class="form-control"
+            placeholder="When you want your order to be delivered? (If not specified, it will be ordered in one hour)" onfocus="this.type='time'" />
+    </div>
+    <div class="form-group mb-2">
+        <select class="form-select" id="paymentType" name="paymentType">
+            <option disabled selected hidden>Select Payment type
+            </option>
+            <% paymentTypes.forEach(type=> { %>
+                <option>
+                    <%= type.name %>
+                </option>
+                <% }) %>
+        </select>
+    </div>
+    <input type="text" id="restaurant" name="restaurant" style="display: none;">
+    <input type="text" id="toPay" name="toPay" style="display: none;">
+    <input type="submit" class="btn btn-success" value="Submit">
+</form>
+
+<script>
+    $(document).ready(function () {
+        let order = JSON.parse('<%- JSON.stringify(order) %>');
+        let total = 0;
+        let restaurant = '';
+        order.forEach(orderProduct => {
+            total += parseFloat(orderProduct.fullPrice);
+            restaurant = orderProduct.product.restaurant;
+        });
+
+        $('#total').append(total + ' KM');
+        $('#toPay').val(total);
+        $('#restaurant').val(restaurant);
+
+    });
+
+    $('.removeFromBasket').click(function () {
+        let id = $(this).data('id');
+
+        $.ajax({
+            url: `./basket/${id}`,
+            type: 'put',
+            data: { id: id },
+            success: function (data) {
+                location.reload();
+            },
+        });
+    });
+</script>

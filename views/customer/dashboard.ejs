@@ -13,7 +13,8 @@
     <button id="productSearch" type="button" class="btn btn-info">Search for products</button>
     <form method="post" action="/customer/productSearch" style="display: none">
         <div class="form-group">
-            <input class="form-control" type="text" id="searchProduct" name="searchProduct" placeholder="Search by Product name">
+            <input class="form-control" type="text" id="searchProduct" name="searchProduct"
+                placeholder="Search by Product name">
             <input type="submit" value="Submit">
         </div>
     </form>
@@ -22,7 +23,8 @@
     <button id="productTypeSearch" type="button" class="btn btn-info">Search for products by type</button>
     <form method="post" action="/customer/productTypeSearch" style=" display: none">
         <div class="form-group">
-            <input class="form-control" type="text" id="searchProductType" name="searchProductType" placeholder="Search by Product type">
+            <input class="form-control" type="text" id="searchProductType" name="searchProductType"
+                placeholder="Search by Product type">
             <input type="submit" value="Submit">
         </div>
     </form>
@@ -54,6 +56,7 @@
     <% } else { %>
         <div id="customerMap" class="row mt-5 mb-2" style="width: 100%; height: 360px; border-radius: 5px;">
         </div>
+        <div id="restaurantsData"></div>
         <% } %>
 
             <script src="/javascripts/geocode.js"></script>
@@ -111,7 +114,8 @@
                         },
                         properties: {
                             title: restaurant.name,
-                            icon: 'restaurant'
+                            icon: 'restaurant',
+                            description: `<strong>${restaurant.location.address}</strong>`
                         }
                     }
                 });
@@ -120,7 +124,7 @@
                 function loadMap(markers) {
                     map.on('load', function () {
                         map.addLayer({
-                            id: 'places',
+                            id: 'points',
                             type: 'symbol',
                             source: {
                                 type: 'geojson',
@@ -138,6 +142,40 @@
                                 'text-anchor': 'top'
                             }
                         });
+
+                        map.on('click', 'points', (e) => {
+                            const coordinates = e.features[0].geometry.coordinates.slice();
+                            const description = e.features[0].properties.description;
+
+                            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                            }
+
+                            new mapboxgl.Popup()
+                                .setLngLat(coordinates)
+                                .setHTML(description)
+                                .addTo(map);
+                        });
+
+                        map.on('mouseenter', 'points', () => {
+                            map.getCanvas().style.cursor = 'pointer';
+                        });
+
+                        map.on('mouseleave', 'points', () => {
+                            map.getCanvas().style.cursor = '';
+                        });
                     });
                 }
+
+                availableRestaurants.forEach(restaurant => {
+                    let container = document.createElement('div');
+                    container.classList.add('text-center', 'col-md-5', 'container');
+                    container.style.border = '1px solid black';
+                    container.style.borderRadius = '3px';
+
+                    container.innerHTML = `<h3>${restaurant.name}</h3><a href="./restaurant/${restaurant._id}">More details</a>`;
+               
+                    const current = document.getElementById('restaurantsData');
+                    current.appendChild(container);
+                });
             </script>

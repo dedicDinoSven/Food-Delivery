@@ -5,38 +5,35 @@ const OrderSchema = new Schema({
 	restaurant: {
 		type: Schema.Types.ObjectId,
 		ref: 'Restaurant',
-		required: true,
+		required: true
 	},
 	customer: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
-		required: true,
+		required: true
 	},
 	courier: {
 		type: Schema.Types.ObjectId,
-		ref: 'User',
-		required: true,
+		ref: 'User'
 	},
-	payment: {
+	paymentType: {
 		type: Schema.Types.ObjectId,
 		ref: 'PaymentType',
-		required: true,
+		required: true
 	},
 	comment: String,
 	orderTime: {
-		type: Date,
-		default: Date.now
+		type: String,
 	},
 	price: {
 		type: Number,
 		required: true
 	},
-	status: {
+	orderStatus: {
 		type: Schema.Types.ObjectId,
 		ref: 'OrderStatus',
-		required: true,
-	},
-	
+		required: true
+	}
 });
 
 OrderSchema.method('toJSON', function () {

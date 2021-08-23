@@ -1,0 +1,58 @@
+<div id="products" class="mt-5">
+    <h2 class="text-center mb-2">Products</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <% products.forEach(product=> { %>
+            <div class="col">
+                <div class="card h-100" id="<%= product._id %>">
+                    <div class="card-header">
+                        <p data-target="menu">
+                            <%= product.menu.name %>
+                        </p>
+                    </div>
+                    <img src="<%= product.photoUrl %>" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title" data-target="productName">
+                            <%= product.name %>
+                        </h5>
+                        <p class="card-subtitle text-muted">
+                            <span data-target="productPrice">
+                                <%= product.price %>
+                            </span> KM
+                        </p>
+                        <p class="card-text" data-target="productDesc">
+                            <%= product.description %>
+                        </p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <input type="number" data-target="quantity" id="quantity" name="quantity"
+                            class="form-control form-floating mb-2" value="0" min="1" max="99" style="width: 50px;">
+                        <label for="quantity">Quantity</label>
+                        <button class="btn btn-success mb-2 basket" data-id="<%= product._id %>">Add to basket</button>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+    </div>
+</div>
+
+<script>
+    let counter = 0;
+    $(document).on('click', '.basket', function () {
+        const id = $(this).data('id');
+        const price = $('#' + id).children('div').children('p')
+            .children('span[data-target=productPrice]')
+            .text()
+            .trim();
+        const quantity = $('#' + id).children('div').children('input[data-target=quantity]').val();
+        const fullPrice = price * quantity;
+
+        $.ajax({
+            url: `/customer/basket/${id}`,
+            method: 'post',
+            data: { price, quantity, fullPrice },
+            success: (function (data) {
+                location.reload();
+            })
+        });
+    });
+</script>
