@@ -1,5 +1,6 @@
 const passport = require('passport');
 const { validationResult } = require('express-validator');
+const { sendMailToCustomer } = require('../middleware/nodemailer');
 
 const User = require('../models/User');
 const Location = require('../models/Location').Location;
@@ -10,59 +11,6 @@ const OrderProduct = require('../models/OrderProduct');
 const PaymentType = require('../models/PaymentType');
 const OrderStatus = require('../models/OrderStatus');
 const Order = require('../models/Order');
-
-exports.getRegister = async (req, res) => {
-	res.render('register', { currentUserType: undefined });
-};
-
-exports.postRegister = async (req, res, next) => {
-	passport.authenticate(
-		'register',
-		{ session: false },
-		async (err, user, info) => {
-			try {
-				const { fullName, email, password, password2 } = req.body;
-				let errors = validationResult(req);
-				let errorMessages = [];
-
-				errors.array().map((error) => {
-					errorMessages.push(error.msg);
-				});
-
-				if (errorMessages.length > 0) {
-					return res.render('register', {
-						errors: errorMessages,
-						fullName: fullName,
-						email: email,
-						password: password,
-						password2: password2
-					});
-				}
-
-				if (err) {
-					return next(err);
-				}
-
-				if (!user) {
-					errorMessages.push(info.msg);
-
-					return res.render('register', {
-						errors: errorMessages,
-						fullName: fullName,
-						email: email,
-						password: password,
-						password2: password2
-					});
-				}
-
-				req.flash('success_msg', info.msg);
-				return res.redirect('/login');
-			} catch (err) {
-				return next(err);
-			}
-		}
-	)(req, res, next);
-};
 
 exports.getDashboard = async (req, res) => {
 	try {
@@ -282,9 +230,47 @@ exports.postOrder = async (req, res) => {
 			.lean()
 			.exec();
 
+		sendMailToCustomer(req.user.email);
+
 		res.redirect('./dashboard');
 	} catch (err) {
 		console.log(err);
+		res.status(400).send(err);
+	}
+};
+
+exports.getOrders = async (req, res) => {
+	try {
+		const orders = await OrderProduct.find(
+			{ customer: req.user.id },
+			'-__v -customer -active -price'
+		)
+			.populate({
+				path: 'product',
+				populate: {
+					path: 'menu restaurant',
+					populate: {
+						path: 'restaurantType', 
+						select: '-__v -active'
+					},
+					select: '-__v -admin -courier -active'
+				},
+				select: '-__v -active'
+			})
+			.populate({
+				path: 'order',
+				populate: {
+					path: 'paymentType orderStatus',
+					select: '-__v -active'
+				},
+				select: '-__v -customer -restaurant'
+			})
+			.lean()
+			.exec();
+
+		console.log(orders);
+		res.render('./customer/orders', { orders });
+	} catch (err) {
 		res.status(400).send(err);
 	}
 };

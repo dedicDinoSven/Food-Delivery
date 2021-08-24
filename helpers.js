@@ -5,6 +5,3 @@ exports.cookieExtractor = (req) => {
     }
     return token;
 }
-
-
-exports.register = (req, res) => {}

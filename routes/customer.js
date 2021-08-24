@@ -1,11 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const customer = require('../controllers/customer');
-const { registrationValidator } = require('../middleware/authValidators');
-
-router.get('/register', customer.getRegister);
-
-router.post('/register', registrationValidator, customer.postRegister);
 
 router.get('/dashboard', customer.getDashboard);
 
@@ -29,4 +24,5 @@ router.put('/basket/:id', customer.removeFromBasket);
 
 router.post('/order', customer.postOrder);
 
+router.get('/orders', customer.getOrders);
 module.exports = router;

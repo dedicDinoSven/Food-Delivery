@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const index = require('../controllers/index');
-const { loginValidator } = require('../middleware/authValidators');
+const { registrationValidator, loginValidator } = require('../middleware/authValidators');
 const passport = require('passport');
 
 router.get('/', index.getWelcome);
+
+router.get('/register', index.getRegister);
+
+router.post('/register', registrationValidator, index.postRegister);
 
 router.get('/login', index.getLogin);
 
