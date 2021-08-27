@@ -29,6 +29,13 @@ io.on('connection', (socket) => {
 		delete users[socket.id];
 	});
 
+	socket.on('customer-notification', (data) => {
+		socket.broadcast.emit('customer-notification', data);
+	});
+
+	socket.on('courier-notification', (data) => {
+		socket.broadcast.emit('courier-notification', data);
+	});
 });
 
 module.exports = socketApi;

@@ -1,0 +1,37 @@
+<% orders.forEach(order=> { %>
+    <div id="<%= order._id %>">
+        <p data-target="customer">Customer: <%= order.customer.fullName %>
+        </p>
+        <% if (order.orderStatus.name !=='Delivered' ) { %>
+            <button class="btn btn-primary deliverOrder" data-id="<%= order._id %>" data-customer="<%= order.customer.fullName %>">Deliver</button>
+            <% } else { %>
+                <p>Already delivered</p>
+                <% } %>
+    </div>
+    <% }) %>
+
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io();
+
+            $('.deliverOrder').click(function () {
+                let id = $(this).data('id');
+                let customer = $(this).data('customer');
+                $.ajax({
+                    url: `./deliverOrder/${id}`,
+                    type: 'put',
+                    data: { id },
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+
+                const data = {
+                    customer: customer,
+                    courier: JSON.parse('<%- JSON.stringify(courier.fullName) %>'),
+                    deliveryTime: new Date().toLocaleTimeString()
+                }
+                socket.emit('courier-notification', data);
+            });
+        </script>

@@ -31,7 +31,7 @@ socket.on('user-disconnected', (name, time) => {
 chatForm.on('submit', (e) => {
 	e.preventDefault();
 	const message = messageInput.val();
-	socket.emit('send-chat-message', message); //emit msg to server
+	socket.emit('send-chat-message', message);
 	messageInput.val('');
 	messageInput.focus();
 });

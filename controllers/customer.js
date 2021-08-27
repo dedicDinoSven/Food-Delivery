@@ -9,14 +9,6 @@ const OrderStatus = require('../models/OrderStatus');
 const Order = require('../models/Order');
 
 const { sendMailToCustomer } = require('../middleware/nodemailer');
-const webpush = require('web-push');
-
-webpush.setGCMAPIKey('AAAAYerr1d8:APA91bGBRezpjDxq2MAjvZX9_c3au1uk705tq9BRQI3FZCegFoJnlplueQwHUTcecrI55ZWaDz0q5VokymuIzk6y_lzTU83n1Lt2d9aLUg8841w-raZM8eFHXopejH-_x9GeIxiGIF-T');
-webpush.setVapidDetails(
-	'mailto:fooddelivery19597@hotmail.com',
-	process.env.PUBLIC_VAPID_KEY,
-	process.env.PRIVATE_VAPID_KEY
-);
 
 exports.getDashboard = async (req, res) => {
 	try {
