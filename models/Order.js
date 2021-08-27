@@ -24,6 +24,11 @@ const OrderSchema = new Schema({
 	comment: String,
 	orderTime: {
 		type: String,
+		required: true
+	},
+	orderDate: {
+		type: Date,
+		default: Date.now
 	},
 	price: {
 		type: Number,

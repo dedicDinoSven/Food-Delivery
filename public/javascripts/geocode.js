@@ -2,8 +2,11 @@ mapboxgl.accessToken =
 	'pk.eyJ1Ijoibm9kaTE5MjEiLCJhIjoiY2tqaGJycDZ2MjZ4bDMxc2NmYjUyMGlsMCJ9.E1UD5UfxO54qrcxYrGxLcw';
 const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
 
+let formMap;
+let geocoder;
+
 if ($('#formMap').length) {
-	const formMap = new mapboxgl.Map({
+	formMap = new mapboxgl.Map({
 		container: 'formMap',
 		style: 'mapbox://styles/mapbox/streets-v11',
 		zoom: 14,
@@ -13,7 +16,7 @@ if ($('#formMap').length) {
 	formMap.addControl(new mapboxgl.FullscreenControl());
 	formMap.addControl(new mapboxgl.NavigationControl());
 
-	const geocoder = new MapboxGeocoder({
+	geocoder = new MapboxGeocoder({
 		accessToken: mapboxgl.accessToken,
 		mapboxgl: mapboxgl,
 		type: 'address',

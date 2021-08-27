@@ -7,11 +7,7 @@ const map = new mapboxgl.Map({
 
 map.addControl(new mapboxgl.FullscreenControl());
 map.addControl(new mapboxgl.NavigationControl());
-
-let locations = JSON.parse('<%- JSON.stringify(restaurantLocations) %>');
-locations.forEach((loc) => console.log(loc.streetNum));
-console.log(typeof locations);
-/* let rests = JSON.parse('<%- JSON.stringify(restaurants) %>');
+let rests = JSON.parse('<%- JSON.stringify(restaurants) %>');
 	const markers = rests.map((rest) => {
 		return {
 			type: 'Feature',
@@ -27,7 +23,7 @@ console.log(typeof locations);
 		};
 	});
 
-	loadMap(markers); */
+	loadMap(markers); 
 
 // set markers with data from db
 function loadMap(markers) {

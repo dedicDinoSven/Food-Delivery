@@ -1,7 +1,7 @@
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const JWTstrategy = require('passport-jwt').Strategy;
-const { cookieExtractor } = require('../helpers');
+const cookieExtractor = require('../utils/cookieExtractor');
 
 const User = require('../models/User');
 const UserType = require('../models/UserType');

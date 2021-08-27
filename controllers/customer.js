@@ -1,7 +1,3 @@
-const passport = require('passport');
-const { validationResult } = require('express-validator');
-const { sendMailToCustomer } = require('../middleware/nodemailer');
-
 const User = require('../models/User');
 const Location = require('../models/Location').Location;
 const Restaurant = require('../models/Restaurant');
@@ -11,6 +7,16 @@ const OrderProduct = require('../models/OrderProduct');
 const PaymentType = require('../models/PaymentType');
 const OrderStatus = require('../models/OrderStatus');
 const Order = require('../models/Order');
+
+const { sendMailToCustomer } = require('../middleware/nodemailer');
+const webpush = require('web-push');
+
+webpush.setGCMAPIKey('AAAAYerr1d8:APA91bGBRezpjDxq2MAjvZX9_c3au1uk705tq9BRQI3FZCegFoJnlplueQwHUTcecrI55ZWaDz0q5VokymuIzk6y_lzTU83n1Lt2d9aLUg8841w-raZM8eFHXopejH-_x9GeIxiGIF-T');
+webpush.setVapidDetails(
+	'mailto:fooddelivery19597@hotmail.com',
+	process.env.PUBLIC_VAPID_KEY,
+	process.env.PRIVATE_VAPID_KEY
+);
 
 exports.getDashboard = async (req, res) => {
 	try {
@@ -161,7 +167,7 @@ exports.getBasket = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./customer/basket', { order, paymentTypes });
+		res.render('./customer/basket', { order, paymentTypes, user: req.user });
 	} catch (err) {
 		console.log(err);
 		res.status(400).send(err);
@@ -229,9 +235,9 @@ exports.postOrder = async (req, res) => {
 		)
 			.lean()
 			.exec();
-
+			
 		sendMailToCustomer(req.user.email);
-
+		
 		res.redirect('./dashboard');
 	} catch (err) {
 		console.log(err);

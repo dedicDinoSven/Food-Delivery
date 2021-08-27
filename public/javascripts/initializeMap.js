@@ -1,6 +1,3 @@
-let lng = JSON.parse($('#hiddenLng').text());
-let lat = JSON.parse($('#hiddenLat').text());
-
 const map = new mapboxgl.Map({
 	container: 'map',
 	style: 'mapbox://styles/mapbox/streets-v11',

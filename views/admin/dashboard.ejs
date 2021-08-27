@@ -89,9 +89,9 @@
     <h2 class="text-center mb-2">Products</h2>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <% products.forEach(product=> { %>
-            <div class="col" >
+            <div class="col">
                 <div class="card h-100" id="<%= product._id %>">
-                    <div class="card-header" >
+                    <div class="card-header">
                         <p data-target="menu">
                             <%= product.menu.name %>
                         </p>
@@ -101,17 +101,18 @@
                         <h5 class="card-title" data-target="productName">
                             <%= product.name %>
                         </h5>
-                        <p class="card-subtitle text-muted" >
-                            <span data-target="productPrice"><%= product.price %></span> KM
+                        <p class="card-subtitle text-muted">
+                            <span data-target="productPrice">
+                                <%= product.price %>
+                            </span> KM
                         </p>
                         <p class="card-text" data-target="productDesc">
                             <%= product.description %>
                         </p>
                     </div>
                     <div class="card-footer text-center">
-                        <button class="btn btn-primary mb-2 updateProduct" type="button"
-                            data-id="<%= product._id %>" data-bs-toggle="modal"
-                            data-bs-target="#updateProductModal">Update</button>
+                        <button class="btn btn-primary mb-2 updateProduct" type="button" data-id="<%= product._id %>"
+                            data-bs-toggle="modal" data-bs-target="#updateProductModal">Update</button>
                         <% if (product.active===true) { %>
                             <button class="btn btn-primary deactivateProduct" data-id="<%= product._id %>">
                                 Deactivate
@@ -128,17 +129,19 @@
     </div>
 </div>
 
-<span id="hiddenLng" hidden>
-    <%= JSON.stringify(restaurant.location.lng) %>
-</span>
-<span id="hiddenLat" hidden>
-    <%= JSON.stringify(restaurant.location.lat) %>
-</span>
-
 <% include ./updateRestaurantForm %>
     <% include ./addProductForm %>
         <% include ./updateProductForm %>
-        
+
+            <script>
+                let lng = JSON.parse('<%- JSON.stringify(restaurant.location.lng) %>');
+                let lat = JSON.parse('<%- JSON.stringify(restaurant.location.lat) %>');
+            </script>
             <script src="/javascripts/geocode.js"></script>
             <script src="/javascripts/initializeMap.js"></script>
+            <script src="/socket.io/socket.io.js"></script>
             <script src="/javascripts/admin.js"></script>
+
+
+            
+            

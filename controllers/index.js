@@ -96,13 +96,13 @@ exports.postLogin = async (req, res, next) => {
 					id: user._id,
 					fullName: user.fullName,
 					email: user.email,
-					userType: user.userType,
+					userType: user.userType
 				};
 
 				const token = jwt.sign({ user: body }, 'TOP_SECRET');
 				res.cookie('jwt', token);
 
-				const userType = await UserType.findOne({ _id: user.userType }); 
+				const userType = await UserType.findOne({ _id: user.userType });
 
 				let redirectUrl = '';
 				switch (userType.name) {
@@ -127,14 +127,13 @@ exports.postLogin = async (req, res, next) => {
 	})(req, res, next);
 };
 
-exports.getDashboard = (req, res) => {
-	console.log(req.user);
-	res.render('dashboard');
-};
-
 exports.getLogout = (req, res) => {
 	req.logout();
 	req.flash('success_msg', 'Logged out successfully');
 	res.clearCookie('jwt');
 	res.redirect('/login');
+};
+
+exports.getChat = (req, res) => {
+	res.render('chat', { user: req.user });
 };
