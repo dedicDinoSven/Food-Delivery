@@ -28,4 +28,6 @@ router.get('/addProductToOffer/:id', admin.getAddProductToOffer);
 
 router.post('/addProductToOffer/:id', admin.postAddProductToOffer);
 
+router.post('/report/:id', admin.emailReport);
+
 module.exports = router;

@@ -64,4 +64,6 @@ router.get('/register/:id', superAdmin.getAdminRegister);
 
 router.post('/register/:id', registrationValidator, superAdmin.postAdminRegister);
 
+router.post('/report', superAdmin.emailReport);
+
 module.exports = router;

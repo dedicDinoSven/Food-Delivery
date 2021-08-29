@@ -158,3 +158,15 @@ socket.on('courier-notification', (data) => {
 		}
 	);
 });
+
+$('#emailReport').click(function () {
+	let id = $(this).data('id');
+
+	$.ajax({
+		url: `./report/${id}`,
+		type: 'post',
+		success: function (data) {
+			location.reload();
+		}
+	});
+});

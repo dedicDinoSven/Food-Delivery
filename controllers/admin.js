@@ -1,5 +1,7 @@
 const passport = require('passport');
 const { validationResult } = require('express-validator');
+const mongoose = require('mongoose');
+const { sendMailToAdmin } = require('../middleware/nodemailer');
 
 const Restaurant = require('../models/Restaurant');
 const RestaurantType = require('../models/RestaurantType');
@@ -8,6 +10,8 @@ const Location = require('../models/Location').Location;
 const UserType = require('../models/UserType');
 const Product = require('../models/Product');
 const SpecialOffer = require('../models/SpecialOffer');
+const Order = require('../models/Order');
+const OrderStatus = require('../models/OrderStatus');
 
 exports.getAdminDashboard = async (req, res) => {
 	try {
@@ -306,7 +310,92 @@ exports.postAddProductToOffer = async (req, res) => {
 
 		res.redirect(303, 'back');
 	} catch (err) {
-		console.log(err);
 		res.status(400).send(err.message);
+	}
+};
+
+exports.emailReport = async (req, res) => {
+	try {
+		const restaurantId = new mongoose.Types.ObjectId(req.params.id);
+		const startDate = new Date(2021, 7, 1);
+		const endDate = new Date(2021, 7, 31);
+
+		const monthsAggregation = await Order.aggregate([
+			{
+				$match: {
+					restaurant: restaurantId,
+					orderDate: {
+						$gte: startDate,
+						$lte: endDate
+					}
+				}
+			},
+			{
+				$group: {
+					_id: {
+						year: { $year: '$orderDate' },
+						month: { $month: '$orderDate' }
+					},
+					count: { $sum: 1 }
+				}
+			}
+		]);
+
+		const daysAggregation = await Order.aggregate([
+			{
+				$match: {
+					restaurant: restaurantId,
+					orderDate: {
+						$gte: startDate,
+						$lte: endDate
+					}
+				}
+			},
+			{
+				$group: {
+					_id: {
+						year: { $year: '$orderDate' },
+						month: { $month: '$orderDate' },
+						day: { $dayOfMonth: '$orderDate' }
+					},
+					count: { $sum: 1 }
+				}
+			},
+			{
+				$group: {
+					_id: { year: '$_id.year', month: '$_id.month' },
+					ordersByDay: { $push: { day: '$_id.day', count: '$count' } }
+				}
+			},
+			{ $sort: { ordersByDay: 1 } }
+		]);
+
+		const orderStatus = await OrderStatus.findOne({ name: 'Delivered' })
+			.lean()
+			.exec();
+
+		//TODO: update after creating 1-n relationship restaurant-courier
+		const courierDelivered = await Order.countDocuments({
+			restaurant: req.params.id,
+			orderDate: {
+				$gte: startDate,
+				$lte: endDate
+			},
+			orderStatus: orderStatus._id
+		})
+			.lean()
+			.exec();
+
+		sendMailToAdmin(
+			req.user.email,
+			daysAggregation[0],
+			monthsAggregation,
+			courierDelivered
+		);
+
+		res.redirect(303, 'back');
+	} catch (err) {
+		console.error(err);
+		res.status(404).send(err.message);
 	}
 };

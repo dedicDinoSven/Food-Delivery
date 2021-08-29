@@ -1,5 +1,6 @@
 const passport = require('passport');
 const { validationResult } = require('express-validator');
+const { sendMailToSuperAdmin } = require('../middleware/nodemailer');
 
 const RestaurantType = require('../models/RestaurantType');
 const MenuType = require('../models/MenuType');
@@ -8,6 +9,7 @@ const OrderStatus = require('../models/OrderStatus');
 const Location = require('../models/Location').Location;
 const Restaurant = require('../models/Restaurant');
 const UserType = require('../models/UserType');
+const Order = require('../models/Order');
 
 exports.getDashboard = async (req, res) => {
 	try {
@@ -488,3 +490,32 @@ exports.postAdminRegister = async (req, res, next) => {
 	)(req, res, next);
 };
 
+exports.emailReport = async (req, res) => {
+	try {
+		const report = await Order.aggregate([
+			{
+				$lookup: {
+					from: 'restaurants',
+					localField: 'restaurant',
+					foreignField: '_id',
+					as: 'restaurant'
+				}
+			},
+			{
+				$group: {
+					_id: '$restaurant',
+					totalOrders: { $sum: 1 },
+					earnings: { $sum: '$price' }
+				}
+			},
+			{ $sort: { earnings: -1 } }
+		]);
+
+		sendMailToSuperAdmin(req.user.email, report);
+		console.log(report[0]);
+		res.redirect(303, 'back');
+	} catch (err) {
+		console.log(err);
+		res.status(404).send(err);
+	}
+};

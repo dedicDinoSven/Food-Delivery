@@ -103,3 +103,13 @@ $('.activateRestaurant').click(function () {
 		}
 	});
 });
+
+$('#emailReport').click(function () {
+	$.ajax({
+		url: `./report`,
+		type: 'post',
+		success: function (data) {
+			location.reload();
+		}
+	});
+});
