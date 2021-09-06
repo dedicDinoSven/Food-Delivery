@@ -14,7 +14,9 @@ const UserType = require('../models/UserType');
 
 exports.getAdminDashboard = async (req, res) => {
 	try {
-		const restaurant = await Restaurant.findOne({ admin: req.user.id })
+		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+
+		const restaurant = await Restaurant.findOne({ admin: user._id })
 			.populate('restaurantType', '-__v')
 			.lean()
 			.exec();
@@ -34,7 +36,8 @@ exports.getAdminDashboard = async (req, res) => {
 			restaurant,
 			restaurantTypes,
 			menuTypes,
-			products
+			products,
+			user
 		});
 	} catch (err) {
 		res.status(404).send(err);
@@ -166,9 +169,11 @@ exports.activateProduct = async (req, res) => {
 
 exports.getAddSpecialOffer = async (req, res) => {
 	try {
+		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+
 		const restaurant = await Restaurant.findById(req.params.id);
 
-		res.render('./admin/addSpecialOfferForm', { restaurant });
+		res.render('./admin/addSpecialOfferForm', { restaurant, user });
 	} catch (err) {
 		res.status(404).send(err);
 	}
@@ -188,7 +193,7 @@ exports.postAddSpecialOffer = async (req, res) => {
 			timeTo: req.body.offerTimeTo
 		});
 		await specialOffer.save();
-		console.log(specialOffer._id);
+
 		res.redirect('/admin/addProductToOffer/' + specialOffer._id);
 	} catch (err) {
 		console.log(err);
@@ -198,7 +203,9 @@ exports.postAddSpecialOffer = async (req, res) => {
 
 exports.getAddProductToOffer = async (req, res) => {
 	try {
-		const restaurant = await Restaurant.findOne({ admin: req.user.id })
+		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+
+		const restaurant = await Restaurant.findOne({ admin: user._id })
 			.lean()
 			.exec();
 
@@ -210,9 +217,8 @@ exports.getAddProductToOffer = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./admin/addProductToOfferForm', { products, specialOffer });
+		res.render('./admin/addProductToOfferForm', { products, specialOffer, user });
 	} catch (err) {
-		console.log(err);
 		res.status(404).send(err);
 	}
 };
@@ -335,8 +341,10 @@ exports.emailReport = async (req, res) => {
 
 exports.getOrders = async (req, res) => {
 	try {
+		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+
 		const restaurant = await Restaurant.findOne(
-			{ admin: req.user.id },
+			{ admin: user._id },
 			'-restaurantType -active -admin -__v'
 		)
 			.lean()
@@ -356,9 +364,8 @@ exports.getOrders = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./admin/orders', { restaurant, couriers, orders });
+		res.render('./admin/orders', { restaurant, couriers, orders, user });
 	} catch (err) {
-		console.error(err);
 		res.status(404).send(err.message);
 	}
 };
@@ -369,11 +376,8 @@ exports.approveOrder = async (req, res) => {
 
 		const order = await Order.findByIdAndUpdate(req.params.id, { courier: req.body.courier, orderStatus: orderStatus._id }).lean().exec();
 
-		console.log(order);
-
 		res.redirect(303, 'back');
 	} catch (err) {
-		console.error(err);
 		res.status(404).send(err.message);
 	}
 }

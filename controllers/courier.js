@@ -12,11 +12,11 @@ const Order = require('../models/Order');
 
 exports.getDashboard = async (req, res) => {
 	try {
-		const courier = await User.findById(req.user.id).lean().exec();
+		const user = await User.findById(req.user.id).lean().exec();
 
 		const orders = await Order.find(
 			{
-				courier: courier._id,
+				courier: user._id,
 				orderDate: {
 					$gte: format(startOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
 					$lte: format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
@@ -47,7 +47,7 @@ exports.getDashboard = async (req, res) => {
 		res.render('./courier/dashboard', {
 			orders,
 			orderProducts,
-			courier
+			user
 		});
 	} catch (err) {
 		console.log(err);

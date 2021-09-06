@@ -9,29 +9,33 @@
         border: 1px solid #ced4da !important;
     }
 </style>
-<div>
-    <button id="productSearch" type="button" class="btn btn-info">Search for products</button>
-    <form method="post" action="/customer/productSearch" style="display: none">
-        <div class="form-group">
-            <input class="form-control" type="text" id="searchProduct" name="searchProduct"
-                placeholder="Search by Product name">
-            <input type="submit" value="Submit">
+<div class="mt-2 mb-2">
+    <form method="post" action="/customer/productSearch" class="mb-2">
+        <div class="input-group row">
+            <div class="form-outline col-11">
+                <input type="search" class="form-control" id="searchProduct" name="searchProduct"
+                    placeholder="Search by Product name" />
+            </div>
+            <button type="submit" class="btn btn-primary col-1">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
     </form>
-</div>
-<div>
-    <button id="productTypeSearch" type="button" class="btn btn-info">Search for products by type</button>
-    <form method="post" action="/customer/productTypeSearch" style=" display: none">
-        <div class="form-group">
-            <input class="form-control" type="text" id="searchProductType" name="searchProductType"
-                placeholder="Search by Product type">
-            <input type="submit" value="Submit">
+    <form method="post" action="/customer/productTypeSearch">
+        <div class="input-group row">
+            <div class="form-outline col-11">
+                <input type="search" class="form-control" id="searchProductType" name="searchProductType"
+                    placeholder="Search by Product type" />
+            </div>
+            <button type="submit" class="btn btn-primary col-1">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
     </form>
 </div>
 <% let lng, lat %>
     <% if (typeof user.location==='undefined' ) { %>
-        <div id="locationSelect" class="row mb-2 mt-5">
+        <div id="locationSelect" class="row mb-2">
             <form method="POST" action="/setLocation/<%= user._id %>">
                 <div class="col" id="locationInputs">
                     <div id="geocoder" class="form-group mb-2"></div>

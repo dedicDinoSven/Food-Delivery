@@ -76,9 +76,6 @@ $('.activate').click(function () {
 	});
 });
 
-const locationMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-formMap.setCenter([lng, lat]);
-
 $('#updateRestaurantModal').on('shown.bs.modal', function () {
 	formMap.resize();
 });
@@ -149,12 +146,3 @@ $('.activateRestaurant').click(function () {
 	});
 });
 
-$('#emailReport').click(function () {
-	$.ajax({
-		url: `./report`,
-		type: 'post',
-		success: function (data) {
-			location.reload();
-		}
-	});
-});

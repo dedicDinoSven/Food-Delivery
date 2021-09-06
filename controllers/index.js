@@ -6,7 +6,6 @@ const UserType = require('../models/UserType');
 const Location = require('../models/Location').Location;
 const User = require('../models/User');
 
-
 exports.getWelcome = (req, res) => {
 	res.render('welcome');
 };
@@ -156,6 +155,15 @@ exports.getLogout = (req, res) => {
 	res.redirect('/login');
 };
 
-exports.getChat = (req, res) => {
-	res.render('chat', { user: req.user });
+exports.getChat = async (req, res) => {
+	try {
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
+			
+		res.render('chat', { user: user });
+	} catch (err) {
+		res.status(404).send(err.message);
+	}
 };

@@ -1,7 +1,7 @@
 <% let lng, lat %>
-    <% if (typeof courier.location==='undefined' ) { %>
+    <% if (typeof user.location==='undefined' ) { %>
         <div id="locationSelect" class="row mb-2 mt-5">
-            <form method="POST" action="/setLocation/<%= courier._id %>">
+            <form method="POST" action="/setLocation/<%= user._id %>">
                 <div class="col" id="locationInputs">
                     <div id="geocoder" class="form-group mb-2"></div>
                     <div id="hiddenInputFields" style="display: none;">
@@ -22,8 +22,8 @@
             </form>
         </div>
         <% } else { %>
-            <% lng=courier.location.lng %>
-                <% lat=courier.location.lat %>
+            <% lng=user.location.lng %>
+                <% lat=user.location.lat %>
                     <div id="map" style="height: 400px; width: 100%"></div>
                     <% } %>
 
@@ -49,7 +49,7 @@
                                     let lat = '<%- lat %>';
 
                                     const socket = io();
-                                    let courier = JSON.parse('<%- JSON.stringify(courier.fullName) %>');
+                                    let courier = JSON.parse('<%- JSON.stringify(user.fullName) %>');
                                     let orders = JSON.parse('<%- JSON.stringify(orders) %>');
                                 </script>
                                 <script src="/javascripts/initializeMap.js"></script>

@@ -8,11 +8,13 @@ const PaymentType = require('../models/PaymentType');
 const OrderStatus = require('../models/OrderStatus');
 const Location = require('../models/Location').Location;
 const Restaurant = require('../models/Restaurant');
+const User = require('../models/User');
 const UserType = require('../models/UserType');
 const Order = require('../models/Order');
 
 exports.getDashboard = async (req, res) => {
 	try {
+		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
 		const restaurants = await Restaurant.find().lean().exec();
 		const restaurantTypes = await RestaurantType.find().lean().exec();
 		const menuTypes = await MenuType.find().lean().exec();
@@ -24,7 +26,8 @@ exports.getDashboard = async (req, res) => {
 			restaurantTypes,
 			menuTypes,
 			paymentTypes,
-			orderStatusTypes
+			orderStatusTypes,
+			user
 		});
 	} catch (err) {
 		res.status(404).send(err);
@@ -34,8 +37,6 @@ exports.getDashboard = async (req, res) => {
 // RestaurantType methods
 exports.addRestaurantType = async (req, res) => {
 	try {
-		console.log(req.body);
-		typeof req.body;
 		const restaurantType = new RestaurantType({
 			name: req.body.name
 		});
@@ -284,11 +285,13 @@ exports.activateOrderStatusType = async (req, res) => {
 // Restaurant methods
 exports.getRestaurantForm = async (req, res) => {
 	try {
+		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+
 		const restaurantTypes = await RestaurantType.find({ active: true })
 			.lean()
 			.exec();
 
-		res.render('./superAdmin/restaurantForm', { restaurantTypes });
+		res.render('./superAdmin/restaurantForm', { restaurantTypes, user });
 	} catch (err) {
 		res.status(404).send(err);
 	}
@@ -328,6 +331,8 @@ exports.postRestaurantForm = async (req, res) => {
 
 exports.getRestaurantById = async (req, res) => {
 	try {
+		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+
 		const restaurant = await Restaurant.findById(req.params.id)
 			.populate('restaurantType', '-__v')
 			.populate('admin', '-__v -password')
@@ -338,7 +343,7 @@ exports.getRestaurantById = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./superAdmin/restaurant', { restaurant, restaurantTypes });
+		res.render('./superAdmin/restaurant', { restaurant, restaurantTypes, user });
 	} catch (err) {
 		res.status(400).send(err);
 	}
@@ -422,6 +427,8 @@ exports.activateRestaurant = async (req, res) => {
 
 exports.getAdminRegister = async (req, res) => {
 	try {
+		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+
 		const restaurant = await Restaurant.findById(req.params.id).lean().exec();
 
 		const currentUserType = await UserType.findById(req.user.userType, 'name')
@@ -430,7 +437,8 @@ exports.getAdminRegister = async (req, res) => {
 
 		res.render('register', {
 			restaurantId: restaurant._id,
-			currentUserType: currentUserType.name
+			currentUserType: currentUserType.name,
+			user: user
 		});
 	} catch (err) {
 		res.status(404).send(err);

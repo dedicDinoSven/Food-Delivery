@@ -1,6 +1,7 @@
 $('.deliverOrder').click(function () {
     let id = $(this).data('id');
     let customer = $(this).data('customer');
+
     $.ajax({
         url: `./deliverOrder/${id}`,
         type: 'put',

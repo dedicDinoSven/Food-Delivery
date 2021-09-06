@@ -73,5 +73,7 @@
         lng = '<%- restaurant.location.lng %>';
         lat = '<%- restaurant.location.lat %>';
     </script>
-    <script src="/javascripts/initializeMap.js"></script>
+    <script src="/javascripts/initializeMap.js">
+        const locationMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+    </script>
     <script src="/javascripts/superAdmin.js"></script>
