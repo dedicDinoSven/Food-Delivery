@@ -27,12 +27,6 @@ const RestaurantSchema = new Schema({
         unique: true,
         sparse: true
     },
-    courier: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        unique: true,
-        sparse: true
-    },
     deliveryDistance: Number,
     active: {
         type: Boolean,

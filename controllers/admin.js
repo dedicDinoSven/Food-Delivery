@@ -1,5 +1,3 @@
-const passport = require('passport');
-const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const { sendMailToAdmin } = require('../middleware/nodemailer');
 
@@ -7,17 +5,17 @@ const Restaurant = require('../models/Restaurant');
 const RestaurantType = require('../models/RestaurantType');
 const MenuType = require('../models/MenuType');
 const Location = require('../models/Location').Location;
-const UserType = require('../models/UserType');
 const Product = require('../models/Product');
 const SpecialOffer = require('../models/SpecialOffer');
 const Order = require('../models/Order');
 const OrderStatus = require('../models/OrderStatus');
+const User = require('../models/User');
+const UserType = require('../models/UserType');
 
 exports.getAdminDashboard = async (req, res) => {
 	try {
 		const restaurant = await Restaurant.findOne({ admin: req.user.id })
 			.populate('restaurantType', '-__v')
-			.populate('courier', '-__v -password')
 			.lean()
 			.exec();
 
@@ -86,71 +84,6 @@ exports.updateRestaurant = async (req, res) => {
 		console.log(err);
 		res.status(400).send(err);
 	}
-};
-
-exports.getCourierRegister = async (req, res) => {
-	const restaurant = await Restaurant.findById(req.params.id).lean().exec();
-	const currentUserType = await UserType.findById(req.user.userType, 'name')
-		.lean()
-		.exec();
-	console.log(currentUserType);
-	res.render('register', {
-		restaurantId: restaurant._id,
-		currentUserType: currentUserType.name
-	});
-};
-
-exports.postCourierRegister = async (req, res, next) => {
-	passport.authenticate(
-		'register',
-		{ session: false },
-		async (err, user, info) => {
-			try {
-				const { fullName, email, password, password2 } = req.body;
-				let errors = validationResult(req);
-				let errorMessages = [];
-
-				errors.array().map((error) => {
-					errorMessages.push(error.msg);
-				});
-
-				if (errorMessages.length > 0) {
-					return res.render('register', {
-						errors: errorMessages,
-						fullName: fullName,
-						email: email,
-						password: password,
-						password2: password2
-					});
-				}
-
-				if (err) {
-					return next(err);
-				}
-
-				if (!user) {
-					errorMessages.push(info.msg);
-
-					return res.render('register', {
-						errors: errorMessages,
-						fullName: fullName,
-						email: email,
-						password: password,
-						password2: password2
-					});
-				}
-
-				await Restaurant.findByIdAndUpdate(req.params.id, { courier: user._id })
-					.lean()
-					.exec();
-
-				req.flash('success_msg', info.msg);
-				return res.redirect('/admin/dashboard');
-			} catch (err) {
-				return next(err);
-			}
-		}
-	)(req, res, next);
 };
 
 exports.addProduct = async (req, res) => {
@@ -399,3 +332,48 @@ exports.emailReport = async (req, res) => {
 		res.status(404).send(err.message);
 	}
 };
+
+exports.getOrders = async (req, res) => {
+	try {
+		const restaurant = await Restaurant.findOne(
+			{ admin: req.user.id },
+			'-restaurantType -active -admin -__v'
+		)
+			.lean()
+			.exec();
+
+		const userType = await UserType.findOne({ name: 'Courier' }).lean().exec();
+
+		const couriers = await User.find(
+			{ userType: userType._id, active: true },
+			'-__v -userType -password -dateJoined -active'
+		)
+			.lean()
+			.exec();
+
+		const orders = await Order.find({ restaurant: restaurant._id }, '-restaurant -__v')
+			.populate('orderStatus paymentType customer', '-__v -active -password')
+			.lean()
+			.exec();
+
+		res.render('./admin/orders', { restaurant, couriers, orders });
+	} catch (err) {
+		console.error(err);
+		res.status(404).send(err.message);
+	}
+};
+
+exports.approveOrder = async (req, res) => {
+	try {
+		const orderStatus = await OrderStatus.findOne({ name: 'Approved' }).lean().exec();
+
+		const order = await Order.findByIdAndUpdate(req.params.id, { courier: req.body.courier, orderStatus: orderStatus._id }).lean().exec();
+
+		console.log(order);
+
+		res.redirect(303, 'back');
+	} catch (err) {
+		console.error(err);
+		res.status(404).send(err.message);
+	}
+}

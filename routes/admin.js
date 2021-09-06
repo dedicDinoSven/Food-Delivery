@@ -1,16 +1,11 @@
 let express = require('express');
 let router = express.Router();
 let admin = require('../controllers/admin');
-const { registrationValidator } = require('../middleware/authValidators');
 const parser = require('../middleware/cloudinary');
 
 router.get('/dashboard', admin.getAdminDashboard);
 
 router.put('/updateRestaurant/:id', admin.updateRestaurant);
-
-router.get('/register/:id', admin.getCourierRegister);
-
-router.post('/register/:id', registrationValidator, admin.postCourierRegister);
 
 router.post('/addProduct/:id', parser.single('productPhoto'), admin.addProduct);
 
@@ -30,4 +25,7 @@ router.post('/addProductToOffer/:id', admin.postAddProductToOffer);
 
 router.post('/report/:id', admin.emailReport);
 
+router.get('/orders', admin.getOrders);
+
+router.put('/approveOrder/:id', admin.approveOrder);
 module.exports = router;

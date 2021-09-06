@@ -13,7 +13,7 @@ passport.use(
 		{
 			usernameField: 'email',
 			passwordField: 'password',
-			passReqToCallback: true,
+			passReqToCallback: true
 		},
 		async (req, email, password, done) => {
 			try {
@@ -21,20 +21,19 @@ passport.use(
 
 				const url = req.originalUrl;
 				let userType;
-				console.log(url);
-				switch (url) {
-					case '/superAdmin/register/' + req.params.id:
-						userType = await UserType.findOne({ name: 'Admin' }).lean().exec();
-						break;
-					case '/admin/register/' + req.params.id:
+
+				if (url === '/superAdmin/register/' + req.params.id) {
+					userType = await UserType.findOne({ name: 'Admin' }).lean().exec();
+				} else {
+					if (req.body.userType === 'Courier') {
 						userType = await UserType.findOne({ name: 'Courier' })
 							.lean()
 							.exec();
-						break;
-					default:
+					} else {
 						userType = await UserType.findOne({ name: 'Customer' })
 							.lean()
 							.exec();
+					}
 				}
 
 				const user = await User.findOne({ email }).lean().exec();
@@ -46,7 +45,7 @@ passport.use(
 					fullName: fullName,
 					email: email,
 					password: password,
-					userType: userType._id,
+					userType: userType._id
 				});
 				await newUser.save();
 
@@ -67,7 +66,7 @@ passport.use(
 				const user = await User.findOne({ email });
 				if (!user) {
 					return done(null, false, {
-						msg: 'User with given email does not exist',
+						msg: 'User with given email does not exist'
 					});
 				}
 
@@ -88,7 +87,7 @@ passport.use(
 	new JWTstrategy(
 		{
 			secretOrKey: 'TOP_SECRET',
-			jwtFromRequest: cookieExtractor,
+			jwtFromRequest: cookieExtractor
 		},
 		async (token, done) => {
 			try {

@@ -32,7 +32,7 @@
 <% let lng, lat %>
     <% if (typeof user.location==='undefined' ) { %>
         <div id="locationSelect" class="row mb-2 mt-5">
-            <form method="POST" action="/customer/setLocation/<%= user._id %>">
+            <form method="POST" action="/setLocation/<%= user._id %>">
                 <div class="col" id="locationInputs">
                     <div id="geocoder" class="form-group mb-2"></div>
                     <div id="hiddenInputFields" style="display: none;">

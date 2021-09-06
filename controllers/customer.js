@@ -28,25 +28,6 @@ exports.getDashboard = async (req, res) => {
 	}
 };
 
-exports.setLocation = async (req, res) => {
-	try {
-		const location = new Location({
-			address: req.body.address,
-			lng: req.body.lng,
-			lat: req.body.lat,
-			streetNum: req.body.streetNum
-		});
-
-		await location.save();
-
-		await User.findByIdAndUpdate(req.params.id, { location: location });
-
-		res.redirect(303, 'back');
-	} catch (err) {
-		res.status(400).send(err);
-	}
-};
-
 exports.productSearch = (req, res) => {
 	let result = req.body.searchProduct;
 	res.redirect('/customer/productSearch/' + result);
@@ -62,7 +43,7 @@ exports.productSearchResult = async (req, res) => {
 			active: true
 		})
 			.populate('menu', '-__v')
-			.populate('restaurant', '-__v -admin -courier')
+			.populate('restaurant', '-__v -admin')
 			.lean()
 			.exec();
 
@@ -91,7 +72,7 @@ exports.productTypeSearchResult = async (req, res) => {
 
 		const products = await Product.find({ menu: menu._id, active: true })
 			.populate('menu', '-__v')
-			.populate('restaurant', '-__v -admin -courier')
+			.populate('restaurant', '-__v -admin')
 			.lean()
 			.exec();
 
@@ -105,7 +86,7 @@ exports.getRestaurant = async (req, res) => {
 	try {
 		const restaurant = await Restaurant.findById(
 			req.params.id,
-			'-__v -admin -courier'
+			'-__v -admin'
 		)
 			.populate('restaurantType', '-__v')
 			.lean()
@@ -255,7 +236,7 @@ exports.getOrders = async (req, res) => {
 					path: 'restaurantType',
 					select: '-__v -active'
 				},
-				select: '-__v -active -admin -courier'
+				select: '-__v -active -admin'
 			})
 			.populate({
 				path: 'orderProducts',

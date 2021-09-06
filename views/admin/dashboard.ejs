@@ -54,34 +54,17 @@
                     </span>
                 </li>
                 <% } %>
-                    <% if (typeof restaurant.courier !=='undefined' ) { %>
-                        <li class="list-group-item"><strong>Courier:</strong>
-                            <%= restaurant.courier.fullName %>
-                        </li>
-                        <li class="list-group-item"><strong>Courier email:</strong>
-                            <%= restaurant.courier.email %>
-                        </li>
-                        <li class="list-group-item"><strong>Courier phone number:</strong>
-                            <%= restaurant.courier.phoneNumber %>
-                        </li>
-                        <% } %>
         </ul>
         <div id="buttonContainer">
             <button class="btn btn-primary mb-2" id="updateRestaurant" type="button" data-id="<%= restaurant._id %>"
                 data-bs-toggle="modal" data-bs-target="#updateRestaurantModal">Update info</button>
-            <% if (typeof restaurant.courier==='undefined' ) { %>
-                <button class="btn btn-secondary" id="registerCourier"><a
-                        href="/admin/register/<%= restaurant._id %>">Add
-                        courier</a></button>
-                <% } %>
-                    <button class="btn btn-primary mb-2" id="addProduct" type="button" data-bs-toggle="modal"
-                        data-bs-target="#addProductModal">New product</button>
-                    <a href="./addSpecialOffer/<%= restaurant._id %>" class="btn btn-primary mb-2 addSpecialOffer"
-                        type="button" style="text-decoration: none;">New Special Offer</a>
-                    <button class="btn btn-primary mb-2" id="emailReport" type="button" data-id="<%= restaurant._id %>">
-                        Get email report
-                    </button>    
-
+            <button class="btn btn-primary mb-2" id="addProduct" type="button" data-bs-toggle="modal"
+                data-bs-target="#addProductModal">New product</button>
+            <a href="./addSpecialOffer/<%= restaurant._id %>" class="btn btn-primary mb-2 addSpecialOffer" type="button"
+                style="text-decoration: none;">New Special Offer</a>
+            <button class="btn btn-primary mb-2" id="emailReport" type="button" data-id="<%= restaurant._id %>">
+                Get email report
+            </button>
         </div>
     </div>
     <div class=" col-md-6 m-auto">

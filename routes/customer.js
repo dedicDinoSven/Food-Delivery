@@ -4,8 +4,6 @@ const customer = require('../controllers/customer');
 
 router.get('/dashboard', customer.getDashboard);
 
-router.post('/setLocation/:id', customer.setLocation);
-
 router.post('/productSearch', customer.productSearch);
 
 router.get('/productSearch/:result?', customer.productSearchResult);

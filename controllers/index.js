@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
 const UserType = require('../models/UserType');
+const Location = require('../models/Location').Location;
+const User = require('../models/User');
+
 
 exports.getWelcome = (req, res) => {
 	res.render('welcome');
@@ -125,6 +128,25 @@ exports.postLogin = async (req, res, next) => {
 			return next(err);
 		}
 	})(req, res, next);
+};
+
+exports.setLocation = async (req, res) => {
+	try {
+		const location = new Location({
+			address: req.body.address,
+			lng: req.body.lng,
+			lat: req.body.lat,
+			streetNum: req.body.streetNum
+		});
+
+		await location.save();
+
+		await User.findByIdAndUpdate(req.params.id, { location: location });
+
+		res.redirect(303, 'back');
+	} catch (err) {
+		res.status(400).send(err);
+	}
 };
 
 exports.getLogout = (req, res) => {

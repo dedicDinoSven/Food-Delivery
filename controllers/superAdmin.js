@@ -512,7 +512,7 @@ exports.emailReport = async (req, res) => {
 		]);
 
 		sendMailToSuperAdmin(req.user.email, report);
-		console.log(report[0]);
+
 		res.redirect(303, 'back');
 	} catch (err) {
 		console.log(err);

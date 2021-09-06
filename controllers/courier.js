@@ -12,15 +12,19 @@ const Order = require('../models/Order');
 
 exports.getDashboard = async (req, res) => {
 	try {
+		const courier = await User.findById(req.user.id).lean().exec();
+
 		const orders = await Order.find(
 			{
+				courier: courier._id,
 				orderDate: {
 					$gte: format(startOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
 					$lte: format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
 				}
 			},
-			'-__v -restaurant'
+			'-__v'
 		)
+			.populate('restaurant', '-__v -admin -courier')
 			.populate('customer', '-__v -active -password -userType -dateJoined')
 			.populate('paymentType', '-__v -active')
 			.populate('orderStatus', '-__v -active')
@@ -39,12 +43,11 @@ exports.getDashboard = async (req, res) => {
 			.lean()
 			.exec();
 
-		const courier = await User.findById(req.user.id).lean().exec();
 
 		res.render('./courier/dashboard', {
 			orders,
 			orderProducts,
-			courier: courier
+			courier
 		});
 	} catch (err) {
 		console.log(err);
@@ -60,7 +63,7 @@ exports.deliverOrder = async (req, res) => {
 
 		await Order.findByIdAndUpdate(
 			req.params.id,
-			{ orderStatus: orderStatus._id, courier: req.user.id },
+			{ orderStatus: orderStatus._id },
 			{ new: true }
 		)
 			.lean()

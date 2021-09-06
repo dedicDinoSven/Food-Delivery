@@ -18,6 +18,8 @@ router.get('/login', index.getLogin);
 
 router.post('/login', loginValidator, index.postLogin);
 
+router.post('/setLocation/:id', index.setLocation);
+
 router.get('/logout', index.getLogout);
 
 router.get(
