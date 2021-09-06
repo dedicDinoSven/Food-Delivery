@@ -45,61 +45,12 @@
                                 <script src="/javascripts/geocode.js"></script>
                                 <script src="/socket.io/socket.io.js"></script>
                                 <script>
-                                    const socket = io();
-
-                                    $('.deliverOrder').click(function () {
-                                        let id = $(this).data('id');
-                                        let customer = $(this).data('customer');
-                                        $.ajax({
-                                            url: `./deliverOrder/${id}`,
-                                            type: 'put',
-                                            data: { id },
-                                            success: function (data) {
-                                                location.reload();
-                                            }
-                                        });
-
-                                        const data = {
-                                            customer: customer,
-                                            courier: JSON.parse('<%- JSON.stringify(courier.fullName) %>'),
-                                            deliveryTime: new Date().toLocaleTimeString()
-                                        };
-                                        socket.emit('courier-notification', data);
-                                    });
-
-
                                     let lng = '<%- lng %>';
                                     let lat = '<%- lat %>';
-                                    const map = new mapboxgl.Map({
-                                        container: 'map',
-                                        style: 'mapbox://styles/mapbox/streets-v11',
-                                        zoom: 17,
-                                        center: [lng, lat]
-                                    });
 
-                                    map.addControl(new mapboxgl.FullscreenControl());
-                                    map.addControl(new mapboxgl.NavigationControl());
-
-                                    const populateMap = () => {
-                                        let orders = JSON.parse('<%- JSON.stringify(orders) %>');
-                                        let marker;
-
-                                        orders.forEach((order) => {
-                                            if (order.orderStatus.name === 'Ordered' || order.orderStatus.name === 'Approved') {
-                                                marker = new mapboxgl.Marker({ color: '#FF0000' })
-                                                    .setLngLat([order.customer.location.lng, order.customer.location.lat])
-                                                    .setPopup(new mapboxgl.Popup().setHTML(`<h1>${order.customer.fullName}</h1>
-                                                            <h2>${order.customer.location.address} ${order.customer.location.streetNum}</h2>`))
-                                                    .addTo(map);
-                                            } else {
-                                                marker = new mapboxgl.Marker({ color: '#00FF00' })
-                                                    .setLngLat([order.customer.location.lng, order.customer.location.lat])
-                                                    .setPopup(new mapboxgl.Popup().setHTML(`<h1>${order.customer.fullName}</h1>
-                                                            <h2>${order.customer.location.address} ${order.customer.location.streetNum}</h2>`))
-                                                    .addTo(map);
-                                            }
-                                        });
-                                    };
-
-                                    populateMap();
+                                    const socket = io();
+                                    let courier = JSON.parse('<%- JSON.stringify(courier.fullName) %>');
+                                    let orders = JSON.parse('<%- JSON.stringify(orders) %>');
                                 </script>
+                                <script src="/javascripts/initializeMap.js"></script>
+                                <script src="/javascripts/courier.js"></script>

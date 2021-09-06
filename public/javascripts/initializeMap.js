@@ -8,4 +8,3 @@ const map = new mapboxgl.Map({
 map.addControl(new mapboxgl.FullscreenControl());
 map.addControl(new mapboxgl.NavigationControl());
 
-const locationMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);

@@ -18,7 +18,7 @@ $('#submitBtn').click(function() {
 		success: function (data) {
 			location.reload();
 		}
-	})
+	});
 });
 
 $(document).on('click', '.update', function() {
@@ -57,7 +57,6 @@ $('.deactivate').click(function () {
 	$.ajax({
 		url: `./deactivate${group}Type/${id}`,
 		type: 'put',
-		data: { id: id },
 		success: function (data) {
 			location.reload();
 		},
@@ -71,10 +70,58 @@ $('.activate').click(function () {
 	$.ajax({
 		url: `./activate${group}Type/${id}`,
 		type: 'put',
-		data: { id: id },
 		success: function (data) {
 			location.reload();
 		},
+	});
+});
+
+const locationMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+formMap.setCenter([lng, lat]);
+
+$('#updateRestaurantModal').on('shown.bs.modal', function () {
+	formMap.resize();
+});
+
+$(document).on('click', '#updateRestaurant', function () {
+	let id = $(this).data('id');
+	let name = $('span[data-target=name]').text().trim();
+	let restaurantType = $('span[data-target=restaurantType]').text().trim();
+	let workingHoursStart = $('span[data-target=workingHoursStart]').text().trim();
+	let workingHoursEnd = $('span[data-target=workingHoursEnd]').text().trim();
+	let address = $('span[data-target=address]').text().trim();
+	let streetNum = $('span[data-target=streetNum]').text().trim();
+
+	$('#id').val(id);
+	$('#name').val(name);
+	$('#restaurantType').val(restaurantType);
+	$('#workingHoursStart').val(workingHoursStart);
+	$('#workingHoursEnd').val(workingHoursEnd);
+	geocoder.query(address);
+	$('#streetNum').val(streetNum);
+});
+
+$('#submitUpdate').click(function () {
+	let id = $('#id').val();
+
+	let data = {
+		name: $('#name').val(),
+		restaurantType: $('#restaurantType').val(),
+		workingHoursStart: $('#workingHoursStart').val(),
+		workingHoursEnd: $('#workingHoursEnd').val(),
+		address: $('#address').val(),
+		lng: $('#lng').val(),
+		lat: $('#lat').val(),
+		streetNum: $('#streetNum').val()
+	};
+
+	$.ajax({
+		url: `/superAdmin/updateRestaurant/${id}`,
+		type: 'put',
+		data: data,
+		success: function (data) {
+			location.reload();
+		}
 	});
 });
 
@@ -84,7 +131,6 @@ $('.deactivateRestaurant').click(function () {
 	$.ajax({
 		url: `./deactivateRestaurant/${id}`,
 		type: 'put',
-		data: { id: id },
 		success: function (data) {
 			location.reload();
 		}
@@ -97,7 +143,6 @@ $('.activateRestaurant').click(function () {
 	$.ajax({
 		url: `./activateRestaurant/${id}`,
 		type: 'put',
-		data: { id: id },
 		success: function (data) {
 			location.reload();
 		}

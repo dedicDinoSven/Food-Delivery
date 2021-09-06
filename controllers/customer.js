@@ -47,7 +47,7 @@ exports.productSearchResult = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./customer/productSearchResults', { products });
+		res.render('./customer/searchResults', { products });
 	} catch (err) {
 		res.status(404).send(err);
 	}
@@ -76,7 +76,7 @@ exports.productTypeSearchResult = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./customer/productSearchResults', { products });
+		res.render('./customer/searchResults', { products });
 	} catch (err) {
 		res.status(404).send(err);
 	}

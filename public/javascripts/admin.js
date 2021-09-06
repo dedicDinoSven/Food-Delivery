@@ -1,4 +1,5 @@
 formMap.setCenter([lng, lat]);
+const locationMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
 
 $('#updateRestaurantModal').on('shown.bs.modal', function () {
 	$(formMap).resize();

@@ -57,13 +57,13 @@
 																Register
 															</button>
 												</form>
-												<p class="lead mt-4">Have An Account? <a href="/login">Login</a></p>
+												<% if(typeof currentUserType==='undefined' ) { %>
+													<p class="lead mt-4">Have An Account? <a href="/login">Login</a></p>
+													<% } %>
 										</div>
 									</div>
 								</div>
-
 								<script>
-
 									let currentUserType = '<%- userType %>';
 									let restaurantId = '<%- id %>';
 
@@ -72,5 +72,4 @@
 									} else {
 										$('#form').attr('action', '/register');
 									}
-
 								</script>

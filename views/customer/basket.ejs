@@ -59,45 +59,9 @@
 </form>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    $(document).ready(function () {
-        let order = JSON.parse('<%- JSON.stringify(order) %>');
-        let total = 0;
-        let restaurant = '';
-        order.forEach(orderProduct => {
-            total += parseFloat(orderProduct.fullPrice);
-            restaurant = orderProduct.product.restaurant;
-        });
-
-        $('#total').append(total + ' KM');
-        $('#toPay').val(total);
-        $('#restaurant').val(restaurant);
-
-    });
-
-    $('.removeFromBasket').click(function () {
-        let id = $(this).data('id');
-
-        $.ajax({
-            url: `./basket/${id}`,
-            type: 'put',
-            data: { id: id },
-            success: function (data) {
-                location.reload();
-            },
-        });
-    });
+    let order = JSON.parse('<%- JSON.stringify(order) %>');
+    let customer = JSON.parse('<%- JSON.stringify(user.fullName) %>');
 
     const socket = io();
-
-    $('#submitOrder').click(function () {
-        const data = {
-            customer: JSON.parse('<%- JSON.stringify(user.fullName) %>'),
-            price: $('#toPay').val(),
-            requestedDeliveryTime: $('#orderTime').val() || new Date(),
-            paymentType: $('#paymentType').val()
-        }
-        socket.emit('customer-notification', data);
-    });
-
-    
 </script>
+<script src="/javascripts/customerBasket.js"></script>
