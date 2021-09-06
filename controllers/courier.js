@@ -39,11 +39,12 @@ exports.getDashboard = async (req, res) => {
 			.lean()
 			.exec();
 
-		console.log(orders);
+		const courier = await User.findById(req.user.id).lean().exec();
+
 		res.render('./courier/dashboard', {
 			orders,
 			orderProducts,
-			courier: req.user
+			courier: courier
 		});
 	} catch (err) {
 		console.log(err);

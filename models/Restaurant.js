@@ -38,7 +38,6 @@ const RestaurantSchema = new Schema({
         type: Boolean,
         default: true
     }
-    // rating
 });
 
 RestaurantSchema.pre('save', function (next) {

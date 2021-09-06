@@ -7,6 +7,7 @@ const OrderProduct = require('../models/OrderProduct');
 const PaymentType = require('../models/PaymentType');
 const OrderStatus = require('../models/OrderStatus');
 const Order = require('../models/Order');
+const OrderReview = require('../models/OrderReview');
 
 const { sendMailToCustomer } = require('../middleware/nodemailer');
 
@@ -199,7 +200,7 @@ exports.postOrder = async (req, res) => {
 		today.setHours(today.getHours() + 1);
 		const orderTime = today.getHours() + ':' + today.getMinutes();
 
-		const order = new Order({
+		let order = new Order({
 			restaurant: req.body.restaurant,
 			customer: req.user.id,
 			paymentType: paymentType._id,
@@ -227,9 +228,17 @@ exports.postOrder = async (req, res) => {
 		)
 			.lean()
 			.exec();
-			
+
+		order = await Order.findByIdAndUpdate(
+			order._id,
+			{ $push: { orderProducts: orderProductsIds } },
+			{ new: true }
+		)
+			.lean()
+			.exec();
+
 		sendMailToCustomer(req.user.email);
-		
+
 		res.redirect('./dashboard');
 	} catch (err) {
 		console.log(err);
@@ -239,36 +248,51 @@ exports.postOrder = async (req, res) => {
 
 exports.getOrders = async (req, res) => {
 	try {
-		const orders = await OrderProduct.find(
-			{ customer: req.user.id },
-			'-__v -customer -active -price'
-		)
+		const orders = await Order.find({ customer: req.user.id }, '-__v -customer')
 			.populate({
-				path: 'product',
+				path: 'paymentType orderStatus restaurant orderReview',
 				populate: {
-					path: 'menu restaurant',
-					populate: {
-						path: 'restaurantType', 
-						select: '-__v -active'
-					},
-					select: '-__v -admin -courier -active'
-				},
-				select: '-__v -active'
-			})
-			.populate({
-				path: 'order',
-				populate: {
-					path: 'paymentType orderStatus',
+					path: 'restaurantType',
 					select: '-__v -active'
 				},
-				select: '-__v -customer -restaurant'
+				select: '-__v -active -admin -courier'
+			})
+			.populate({
+				path: 'orderProducts',
+				populate: {
+					path: 'product',
+					populate: {
+						path: 'menu',
+						select: '-__v -active'
+					},
+					select: '-__v -active -price -restaurant'
+				},
+				select: '-__v -active -customer -order -ordered'
 			})
 			.lean()
 			.exec();
 
-		console.log(orders);
 		res.render('./customer/orders', { orders });
 	} catch (err) {
+		console.log(err);
 		res.status(400).send(err);
+	}
+};
+
+exports.reviewOrder = async (req, res) => {
+	try {
+		const orderReview = new OrderReview({
+			comment: req.body.comment,
+			rating: req.body.rating
+		});
+
+		await orderReview.save();
+
+		await Order.findByIdAndUpdate(req.params.id, { orderReview: orderReview }).lean().exec();
+
+		res.redirect(303, 'back');
+	} catch (err) {
+		console.log(err);
+		res.status(404).send(err);
 	}
 };

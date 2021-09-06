@@ -25,4 +25,7 @@ router.put('/basket/:id', customer.removeFromBasket);
 router.post('/order', customer.postOrder);
 
 router.get('/orders', customer.getOrders);
+
+router.post('/reviewOrder/:id', customer.reviewOrder);
+
 module.exports = router;

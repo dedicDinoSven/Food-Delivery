@@ -1,15 +1,19 @@
+<div id="map" style="height: 400px; width: 100%"></div>
 <% orders.forEach(order=> { %>
+
     <div id="<%= order._id %>">
         <p data-target="customer">Customer: <%= order.customer.fullName %>
         </p>
         <% if (order.orderStatus.name !=='Delivered' ) { %>
-            <button class="btn btn-primary deliverOrder" data-id="<%= order._id %>" data-customer="<%= order.customer.fullName %>">Deliver</button>
+            <button class="btn btn-primary deliverOrder" data-id="<%= order._id %>"
+                data-customer="<%= order.customer.fullName %>">
+                Deliver
+            </button>
             <% } else { %>
                 <p>Already delivered</p>
                 <% } %>
     </div>
     <% }) %>
-
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
@@ -31,7 +35,42 @@
                     customer: customer,
                     courier: JSON.parse('<%- JSON.stringify(courier.fullName) %>'),
                     deliveryTime: new Date().toLocaleTimeString()
-                }
+                };
                 socket.emit('courier-notification', data);
             });
+
+            mapboxgl.accessToken =
+                'pk.eyJ1Ijoibm9kaTE5MjEiLCJhIjoiY2tqaGJycDZ2MjZ4bDMxc2NmYjUyMGlsMCJ9.E1UD5UfxO54qrcxYrGxLcw';
+            const map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                zoom: 17,
+                center: [18.413029, 43.85643]
+            });
+
+            map.addControl(new mapboxgl.FullscreenControl());
+            map.addControl(new mapboxgl.NavigationControl());
+
+            const populateMap = () => {
+                let orders = JSON.parse('<%- JSON.stringify(orders) %>');
+                let marker;
+
+                orders.forEach((order) => {
+                    if (order.orderStatus.name === 'Ordered') {
+                        marker = new mapboxgl.Marker({ color: '#FF0000' })
+                            .setLngLat([order.customer.location.lng, order.customer.location.lat])
+                            .setPopup(new mapboxgl.Popup().setHTML(`<h1>${order.customer.fullName}</h1>
+                                                            <h2>${order.customer.location.address} ${order.customer.location.streetNum}</h2>`))
+                            .addTo(map);
+                    } else {
+                        marker = new mapboxgl.Marker({ color: '#00FF00' })
+                            .setLngLat([order.customer.location.lng, order.customer.location.lat])
+                            .setPopup(new mapboxgl.Popup().setHTML(`<h1>${order.customer.fullName}</h1>
+                                                            <h2>${order.customer.location.address} ${order.customer.location.streetNum}</h2>`))
+                            .addTo(map);
+                    }
+                });
+            };
+
+            populateMap();
         </script>

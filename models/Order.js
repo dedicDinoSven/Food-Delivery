@@ -16,6 +16,12 @@ const OrderSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'User'
 	},
+	orderProducts: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'OrderProduct'
+		}
+	],
 	paymentType: {
 		type: Schema.Types.ObjectId,
 		ref: 'PaymentType',
@@ -38,6 +44,10 @@ const OrderSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'OrderStatus',
 		required: true
+	},
+	orderReview: {
+		type: Schema.Types.ObjectId,
+		ref: 'OrderReview'
 	}
 });
 
