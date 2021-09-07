@@ -30,71 +30,93 @@
 	<!-- Mapbox SDK for reverse Geocode -->
 	<script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
 	<% if (typeof user !=='undefined' ) { %>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="./dashboard">Food Delivery</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-					data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
-					aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="nav-item">
-							<a class="nav-link" href="./dashboard">Home</a>
-						</li>
-						<% if (user.userType.name==='SuperAdmin') { %>
-							<li class="nav-item">
-								<a class="nav-link" href="#" id="emailReport">Get email report</a>
-							</li>
-							<% } %>
-								<% if (user.userType.name==='Admin' ) { %>
+		<% type=user.userType.name.charAt(0).toLowerCase() + user.userType.name.slice(1) %>
+				<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+					<div class="container-fluid">
+						<% if (user.userType.name === 'SuperAdmin') { %>
+										<a class="navbar-brand" href="/superadmin/dashboard">Food Delivery</a>
+										<% } %>
+									<% if (user.userType.name === 'Admin') { %>
+									<a class="navbar-brand" href="/admin/dashboard">Food Delivery</a>
+									<% } %>
+									<% if (user.userType.name === 'Customer') { %>
+										<a class="navbar-brand" href="/customer/dashboard">Food Delivery</a>
+										<% } %>
+										<% if (user.userType.name === 'Courier') { %>
+											<a class="navbar-brand" href="/courier/dashboard">Food Delivery</a>
+											<% } %>
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+							data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02"
+							aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item">
+									<% if (user.userType.name === 'SuperAdmin') { %>
+										<a class="nav-link" href="/superadmin/dashboard">Home</a>
+										<% } %>
+									<% if (user.userType.name === 'Admin') { %>
+									<a class="nav-link" href="/admin/dashboard">Home</a>
+									<% } %>
+									<% if (user.userType.name === 'Customer') { %>
+										<a class="nav-link" href="/customer/dashboard">Home</a>
+										<% } %>
+										<% if (user.userType.name === 'Courier') { %>
+											<a class="nav-link" href="/courier/dashboard">Home</a>
+											<% } %>
+								</li>
+								<% if (user.userType.name==='SuperAdmin' ) { %>
 									<li class="nav-item">
-										<a class="nav-link" href="./orders">Orders</a>
+										<a class="nav-link" href="#" id="emailReport">Get email report</a>
 									</li>
 									<% } %>
-										<% if (user.userType.name==='Customer' ) { %>
+										<% if (user.userType.name==='Admin' ) { %>
 											<li class="nav-item">
-												<a class="nav-link" href="./basket">Basket</a>
+												<a class="nav-link" href="../admin/orders">Orders</a>
 											</li>
-											<li class="nav-item">
-												<a class="nav-link" href="./orders">My orders</a>
-											</li>
-					</ul>
-					<% } %>
-					<div class="flex-grow-1 text-right">
-						<ul class="navbar-nav ms-auto flex-nowrap">
-							<li class="nav-item">
-								<a class="nav-link" href="/logout">Logout</a>
-							</li>
-						</ul>
+											<% } %>
+												<% if (user.userType.name==='Customer' ) { %>
+													<li class="nav-item">
+														<a class="nav-link" href="../customer/basket">Basket</a>
+													</li>
+													<li class="nav-item">
+														<a class="nav-link" href="../customer/orders">My orders</a>
+													</li>
+							</ul>
+							<% } %>
+								<div class="flex-grow-1 text-right">
+									<ul class="navbar-nav ms-auto flex-nowrap">
+										<li class="nav-item">
+											<a class="nav-link" href="/logout">Logout</a>
+										</li>
+									</ul>
+								</div>
+						</div>
 					</div>
-				</div>
-			</div>
-		</nav>
-		<% } %>
-			<div class="container">
-				<%- body %>
-			</div>
-
-			<!-- Bootstrap JS-->
-			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
-				integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
-				crossorigin="anonymous"></script>
-
-			<% if (typeof user !=='undefined' && user.userType.name==='SuperAdmin' ) { %>
-				<script>
-					$('#emailReport').click(function () {
-						$.ajax({
-							url: `./report`,
-							type: 'post',
-							success: function (data) {
-								location.reload();
-							}
-						});
-					});
-				</script>
+				</nav>
 				<% } %>
-</body>
+					<div class="container">
+						<%- body %>
+					</div>
 
+					<!-- Bootstrap JS-->
+					<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+						integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+						crossorigin="anonymous"></script>
+
+					<% if (typeof user !=='undefined' && user.userType.name==='SuperAdmin' ) { %>
+						<script>
+							$('#emailReport').click(function () {
+								$.ajax({
+									url: `./report`,
+									type: 'post',
+									success: function (data) {
+										location.reload();
+									}
+								});
+							});
+						</script>
+						<% } %>
+</body>
 </html>

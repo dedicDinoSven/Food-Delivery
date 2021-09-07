@@ -14,7 +14,10 @@ const UserType = require('../models/UserType');
 
 exports.getAdminDashboard = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const restaurant = await Restaurant.findOne({ admin: user._id })
 			.populate('restaurantType', '-__v')
@@ -32,12 +35,16 @@ exports.getAdminDashboard = async (req, res) => {
 			.lean()
 			.exec();
 
+		const menus = [...new Set(products.map((product) => product.menu.name))];
+		console.log(menus);
+		
 		res.render('./admin/dashboard', {
 			restaurant,
 			restaurantTypes,
 			menuTypes,
 			products,
-			user
+			user,
+			menus
 		});
 	} catch (err) {
 		res.status(404).send(err);
@@ -169,7 +176,10 @@ exports.activateProduct = async (req, res) => {
 
 exports.getAddSpecialOffer = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const restaurant = await Restaurant.findById(req.params.id);
 
@@ -203,7 +213,10 @@ exports.postAddSpecialOffer = async (req, res) => {
 
 exports.getAddProductToOffer = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const restaurant = await Restaurant.findOne({ admin: user._id })
 			.lean()
@@ -217,7 +230,11 @@ exports.getAddProductToOffer = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./admin/addProductToOfferForm', { products, specialOffer, user });
+		res.render('./admin/addProductToOfferForm', {
+			products,
+			specialOffer,
+			user
+		});
 	} catch (err) {
 		res.status(404).send(err);
 	}
@@ -341,7 +358,10 @@ exports.emailReport = async (req, res) => {
 
 exports.getOrders = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const restaurant = await Restaurant.findOne(
 			{ admin: user._id },
@@ -359,7 +379,10 @@ exports.getOrders = async (req, res) => {
 			.lean()
 			.exec();
 
-		const orders = await Order.find({ restaurant: restaurant._id }, '-restaurant -__v')
+		const orders = await Order.find(
+			{ restaurant: restaurant._id },
+			'-restaurant -__v'
+		)
 			.populate('orderStatus paymentType customer', '-__v -active -password')
 			.lean()
 			.exec();
@@ -372,12 +395,19 @@ exports.getOrders = async (req, res) => {
 
 exports.approveOrder = async (req, res) => {
 	try {
-		const orderStatus = await OrderStatus.findOne({ name: 'Approved' }).lean().exec();
+		const orderStatus = await OrderStatus.findOne({ name: 'Approved' })
+			.lean()
+			.exec();
 
-		const order = await Order.findByIdAndUpdate(req.params.id, { courier: req.body.courier, orderStatus: orderStatus._id }).lean().exec();
+		const order = await Order.findByIdAndUpdate(req.params.id, {
+			courier: req.body.courier,
+			orderStatus: orderStatus._id
+		})
+			.lean()
+			.exec();
 
 		res.redirect(303, 'back');
 	} catch (err) {
 		res.status(404).send(err.message);
 	}
-}
+};

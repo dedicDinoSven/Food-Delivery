@@ -71,49 +71,58 @@
         <div id="map" style="width: 100%; height: 350px; border-radius: 5px;"></div>
     </div>
 </div>
-
-<div id="products" class="mt-5">
-    <h2 class="text-center mb-2">Products</h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <% products.forEach(product=> { %>
-            <div class="col">
-                <div class="card h-100" id="<%= product._id %>">
-                    <div class="card-header">
-                        <p data-target="menu">
-                            <%= product.menu.name %>
-                        </p>
+<div id="products" class="mt-5 mb-3">
+    <h1 class="text-center mb-2">Products</h1>
+    <% menus.forEach(menu=> { %>
+        <h3 class="text-center mt-2">
+            <%= menu %>
+        </h3>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <% products.forEach(product=> { %>
+                <% if (product.menu.name===menu) { %>
+                    <div class="col">
+                        <div class="card h-100" id="<%= product._id %>">
+                            <div class="card-header" style="display: none;">
+                                <p data-target="menu">
+                                    <%= product.menu.name %>
+                                </p>
+                            </div>
+                            <img src="<%= product.photoUrl %>" class="card-img-top"
+                                style="width: 100%; height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title" data-target="productName">
+                                    <%= product.name %>
+                                </h5>
+                                <p class="card-subtitle text-muted">
+                                    <span data-target="productPrice">
+                                        <%= product.price %>
+                                    </span> KM
+                                </p>
+                                <p class="card-text" data-target="productDesc">
+                                    <%= product.description %>
+                                </p>
+                            </div>
+                            <div class="card-footer text-center"
+                                style="display: flex; justify-content: center; align-items: center;">
+                                <button class="btn btn-primary me-2 updateProduct" type="button"
+                                    data-id="<%= product._id %>" data-bs-toggle="modal"
+                                    data-bs-target="#updateProductModal">Update</button>
+                                <% if (product.active===true) { %>
+                                    <button class="btn btn-danger deactivateProduct" data-id="<%= product._id %>">
+                                        Deactivate
+                                    </button>
+                                    <% } else { %>
+                                        <button class="btn btn-primary activateProduct" data-id="<%= product._id %>">
+                                            Activate
+                                        </button>
+                                        <% } %>
+                            </div>
+                        </div>
                     </div>
-                    <img src="<%= product.photoUrl %>" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title" data-target="productName">
-                            <%= product.name %>
-                        </h5>
-                        <p class="card-subtitle text-muted">
-                            <span data-target="productPrice">
-                                <%= product.price %>
-                            </span> KM
-                        </p>
-                        <p class="card-text" data-target="productDesc">
-                            <%= product.description %>
-                        </p>
-                    </div>
-                    <div class="card-footer text-center">
-                        <button class="btn btn-primary mb-2 updateProduct" type="button" data-id="<%= product._id %>"
-                            data-bs-toggle="modal" data-bs-target="#updateProductModal">Update</button>
-                        <% if (product.active===true) { %>
-                            <button class="btn btn-primary deactivateProduct" data-id="<%= product._id %>">
-                                Deactivate
-                            </button>
-                            <% } else { %>
-                                <button class="btn btn-primary activateProduct" data-id="<%= product._id %>">
-                                    Activate
-                                </button>
-                                <% } %>
-                    </div>
-                </div>
-            </div>
-            <% }) %>
-    </div>
+                    <% } %>
+                        <% }) %>
+        </div>
+        <% }) %>
 </div>
 
 <% include ./updateRestaurantForm %>

@@ -5,6 +5,7 @@ couriers.forEach((courier) => {
 	let restaurantLng = restaurant.location.lng;
 	let restaurantLat = restaurant.location.lat;
 
+	if (typeof courier.location !== 'undefined' ) {
 	distancesCouriersRestaurant.push(
 		getDistanceFromLatLonInKm(
 			courier.location.lat,
@@ -16,6 +17,7 @@ couriers.forEach((courier) => {
 
 	let shortestDistance = Math.min(...distancesCouriersRestaurant);
 	index = distancesCouriersRestaurant.indexOf(shortestDistance.toString());
+		}
 });
 
 let nearestCourier = couriers[index];

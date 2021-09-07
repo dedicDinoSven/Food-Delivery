@@ -12,7 +12,10 @@ const Order = require('../models/Order');
 
 exports.getDashboard = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const orders = await Order.find(
 			{
@@ -42,7 +45,6 @@ exports.getDashboard = async (req, res) => {
 			.populate('product', '-__v -price -active -restaurant -menu')
 			.lean()
 			.exec();
-
 
 		res.render('./courier/dashboard', {
 			orders,

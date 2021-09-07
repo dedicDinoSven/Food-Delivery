@@ -13,16 +13,19 @@ const { sendMailToCustomer } = require('../middleware/nodemailer');
 
 exports.getDashboard = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
-	
-		const restaurants = await Restaurant.find({ active: true })
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
+
+		const restaurants = await Restaurant.find({ active: true }, '-__v -admin')
 			.populate('restaurantType', '-__v')
 			.lean()
 			.exec();
 
 		res.render('./customer/dashboard', {
-			user: user,
-			restaurants: restaurants
+			user,
+			restaurants
 		});
 	} catch (err) {
 		res.status(404).send(err);
@@ -36,7 +39,10 @@ exports.productSearch = (req, res) => {
 
 exports.productSearchResult = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const result = req.params.result;
 		const regex = new RegExp(result, 'i');
@@ -50,7 +56,9 @@ exports.productSearchResult = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./customer/searchResults', { products, user });
+		const menus = [...new Set(products.map((product) => product.menu.name))];
+
+		res.render('./customer/searchResults', { products, user, menus });
 	} catch (err) {
 		res.status(404).send(err);
 	}
@@ -63,7 +71,10 @@ exports.productTypeSearch = (req, res) => {
 
 exports.productTypeSearchResult = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const result = req.params.result;
 		const regex = new RegExp(result, 'i');
@@ -81,7 +92,9 @@ exports.productTypeSearchResult = async (req, res) => {
 			.lean()
 			.exec();
 
-		res.render('./customer/searchResults', { products, user });
+		const menus = [...new Set(products.map((product) => product.menu.name))];
+
+		res.render('./customer/searchResults', { products, user, menus });
 	} catch (err) {
 		res.status(404).send(err);
 	}
@@ -89,25 +102,27 @@ exports.productTypeSearchResult = async (req, res) => {
 
 exports.getRestaurant = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
-		const restaurant = await Restaurant.findById(
-			req.params.id,
-			'-__v -admin'
-		)
+		const restaurant = await Restaurant.findById(req.params.id, '-__v -admin')
 			.populate('restaurantType', '-__v')
 			.lean()
 			.exec();
 
 		const products = await Product.find(
-			{ restaurant: restaurant._id },
+			{ restaurant: restaurant._id, active: true },
 			'-__v -restaurant'
 		)
 			.populate('menu', '-__v')
 			.lean()
 			.exec();
 
-		res.render('./customer/restaurant', { restaurant, products, user });
+		const menus = [...new Set(products.map((product) => product.menu.name))];
+
+		res.render('./customer/restaurant', { restaurant, products, user, menus });
 	} catch (err) {
 		console.log(err);
 		res.status(400).send(err);
@@ -134,7 +149,10 @@ exports.addToBasket = async (req, res) => {
 
 exports.getBasket = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const paymentTypes = await PaymentType.find().lean().exec();
 
@@ -238,7 +256,10 @@ exports.postOrder = async (req, res) => {
 
 exports.getOrders = async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).populate('userType', '-__v -active').lean().exec();
+		const user = await User.findById(req.user.id)
+			.populate('userType', '-__v -active')
+			.lean()
+			.exec();
 
 		const orders = await Order.find({ customer: user._id }, '-__v -customer')
 			.populate({
@@ -280,7 +301,9 @@ exports.reviewOrder = async (req, res) => {
 
 		await orderReview.save();
 
-		await Order.findByIdAndUpdate(req.params.id, { orderReview: orderReview }).lean().exec();
+		await Order.findByIdAndUpdate(req.params.id, { orderReview: orderReview })
+			.lean()
+			.exec();
 
 		res.redirect(303, 'back');
 	} catch (err) {
