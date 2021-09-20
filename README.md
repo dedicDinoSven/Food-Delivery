@@ -13,6 +13,8 @@
 -  Overview of data for all restaurants
 -  Chat with restaurant administators
 
+Example account: email admin@test.com, password admin123
+
 ## Restaurant administrator
 - CRUD operations for single products
 - CRUD operations for special offers
@@ -21,12 +23,16 @@
 - Chat with super administrator
 - Real time notifications when new order is received and when courier delivers order
 - Email report (number of orders for every day in that month and for whole month)
-- 
+
+Example accounts: email admin1@test.com, password admin123; email admin2@test.com, password admin123
+
 ## Courier
 - Review of all orders which need to be delivered today (table and map)
 - Different markers on map for orders which are delivered and for those which are not delivered
 - Sending information to restaurant admin when order is delivered successfully
 - One courier can work for multiple restaurants
+
+Example accounts: email courier1@test.com, password courier123; email courier2@test.com, password courier123
 
 ## Customer
 - After successful registration and login user selects his location (geocoding and reverse geocoding)
@@ -38,4 +44,5 @@
 - Review of all previous orders
 - Rating of service after order is delivered
  
+Example accounts: email customer1@test.com, password customer123; email customer2@test.com, password customer123
 
