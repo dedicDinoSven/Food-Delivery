@@ -3,7 +3,6 @@ require('dotenv').config();
 
 const createError = require('http-errors');
 const express = require('express');
-const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -23,7 +22,6 @@ const indexRouter = require('./routes/index');
 const superAdminRouter = require('./routes/superAdmin');
 
 // view engine setup
-app.use(expressLayouts);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 

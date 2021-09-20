@@ -1,79 +1,143 @@
-<style>
-    .mapboxgl-ctrl-geocoder {
-        width: 100% !important;
-        max-width: 600px !important;
-        box-shadow: none !important;
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    .form-control {
-        border: 1px solid #ced4da !important;
-    }
-</style>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<div class="row mt-5">
-    <div class="col-md-6 m-auto">
-        <h2>Info</h2>
-        <ul class="list-group list-group-flush mb-2" id="<%= restaurant._id %>">
-            <li class="list-group-item"><strong>Name:</strong>
-                <span data-target="name">
-                    <%= restaurant.name %>
-                </span>
-            </li>
-            <li class="list-group-item"><strong>Type of restaurant:</strong>
-                <span data-target="restaurantType">
-                    <%= restaurant.restaurantType.name %>
-                </span>
-            </li>
-            <li class="list-group-item"><strong>Working hours:</strong>
-                <span data-target="workingHoursStart">
-                    <%= restaurant.workingHoursStart%>
-                </span> to <span data-target="workingHoursEnd">
-                    <%= restaurant.workingHoursEnd %>
-                </span>
-            </li>
-            <li class="list-group-item"><strong>Address:</strong>
-                <span data-target="address">
-                    <%= restaurant.location.address %>
-                </span>
-            </li>
-            <li class="list-group-item"><strong>Street number: </strong>
-                <span data-target="streetNum">
-                    <%= restaurant.location.streetNum%>
-                </span>
-            </li>
-            <% if (typeof restaurant.admin !=='undefined' ) { %>
-                <li class="list-group-item"><strong>Administrator:</strong>
-                    <%= restaurant.admin.fullName %>
-                </li>
-                <li class="list-group-item"><strong>Administrator email:</strong>
-                    <%= restaurant.admin.email %>
-                </li>
-                <li class="list-group-item"><strong>Administrator phone number:</strong>
-                    <%= restaurant.admin.phoneNumber %>
-                </li>
-                <% } %>
-        </ul>
-        <div id="buttonContainer" class="mb-2">
-            <button class="btn btn-primary" id="updateRestaurant" type="button" data-id="<%= restaurant._id %>"
-                data-bs-toggle="modal" data-bs-target="#updateRestaurantModal">Update info</button>
-            <% if (typeof restaurant.admin==='undefined' ) { %>
-                <button class="btn btn-secondary" id="registerAdmin"><a
-                        href="/superAdmin/register/<%= restaurant._id %>">Add administrator</a></button>
-                <% } %>
+    <!-- Fontawesome -->
+    <script src="https://kit.fontawesome.com/667f2140fc.js" crossorigin="anonymous"></script>
+    <!-- Bootswatch template for Bootstrap -->
+    <link rel="stylesheet" href="https://bootswatch.com/5/sandstone/bootstrap.min.css" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Mapbox -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+
+    <title>Food Delivery - <%= restaurant.name %>
+    </title>
+
+    <style>
+        .mapboxgl-ctrl-geocoder {
+            width: 100% !important;
+            max-width: 600px !important;
+            box-shadow: none !important;
+        }
+
+        .form-control {
+            border: 1px solid #ced4da !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/superadmin/dashboard">Food Delivery</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/superadmin/dashboard">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="emailReport">Email report</a>
+                    </li>
+                    <li class="nav-item">
+						<a class="nav-link" href="/chat">Chat</a>
+					</li>
+                </ul>
+                <a class="nav-link" style="color: white;" href="/logout">
+                    Sign out </a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-6 m-auto">
+                <h2>Info</h2>
+                <ul class="list-group list-group-flush mb-2" id="<%= restaurant._id %>">
+                    <li class="list-group-item"><strong>Name:</strong>
+                        <span data-target="name">
+                            <%= restaurant.name %>
+                        </span>
+                    </li>
+                    <li class="list-group-item"><strong>Type of restaurant:</strong>
+                        <span data-target="restaurantType">
+                            <%= restaurant.restaurantType.name %>
+                        </span>
+                    </li>
+                    <li class="list-group-item"><strong>Working hours:</strong>
+                        <span data-target="workingHoursStart">
+                            <%= restaurant.workingHoursStart%>
+                        </span> to <span data-target="workingHoursEnd">
+                            <%= restaurant.workingHoursEnd %>
+                        </span>
+                    </li>
+                    <li class="list-group-item"><strong>Address:</strong>
+                        <span data-target="address">
+                            <%= restaurant.location.address %>
+                        </span>
+                    </li>
+                    <li class="list-group-item"><strong>Street number: </strong>
+                        <span data-target="streetNum">
+                            <%= restaurant.location.streetNum%>
+                        </span>
+                    </li>
+                    <% if (typeof restaurant.admin !=='undefined' ) { %>
+                        <li class="list-group-item"><strong>Administrator:</strong>
+                            <%= restaurant.admin.fullName %>
+                        </li>
+                        <li class="list-group-item"><strong>Administrator email:</strong>
+                            <%= restaurant.admin.email %>
+                        </li>
+                        <li class="list-group-item"><strong>Administrator phone number:</strong>
+                            <%= restaurant.admin.phoneNumber %>
+                        </li>
+                        <% } %>
+                </ul>
+                <div id="buttonContainer" class="mb-2">
+                    <button class="btn btn-primary" id="updateRestaurant" type="button" data-id="<%= restaurant._id %>"
+                        data-bs-toggle="modal" data-bs-target="#updateRestaurantModal">Update info</button>
+                    <% if (typeof restaurant.admin==='undefined' ) { %>
+                        <button class="btn btn-primary" id="registerAdmin"><a
+                                href="/superAdmin/register/<%= restaurant._id %>">Add administrator</a></button>
+                        <% } %>
+                </div>
+            </div>
+            <div class="col-md-6 m-auto">
+                <div id="map" style="width: 100%; height: 350px; border-radius: 5px;"></div>
+            </div>
         </div>
     </div>
-    <div class="col-md-6 m-auto">
-        <div id="map" style="width: 100%; height: 350px; border-radius: 5px;"></div>
-    </div>
-</div>
 
-<% include ./updateRestaurantForm %>
-    <script src="/javascripts/geocode.js"></script>
-    <script>
-        lng = '<%- restaurant.location.lng %>';
-        lat = '<%- restaurant.location.lat %>';
-    </script>
-    <script src="/javascripts/initializeMap.js">
-        const locationMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-    </script>
-    <script src="/javascripts/superAdmin.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+
+    <!-- Mapbox Geocoder-->
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+        type="text/css">
+    <!-- Mapbox SDK for reverse Geocode -->
+    <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+
+    <% include ./updateRestaurantForm %>
+        <script src="/javascripts/geocode.js"></script>
+        <script>
+            lng = '<%- restaurant.location.lng %>';
+            lat = '<%- restaurant.location.lat %>';
+        </script>
+        <script src="/javascripts/initializeMap.js"></script>
+        <script src="/javascripts/superAdmin.js"></script>
+</body>
+
+</html>

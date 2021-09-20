@@ -8,6 +8,7 @@ const PaymentType = require('../models/PaymentType');
 const OrderStatus = require('../models/OrderStatus');
 const Order = require('../models/Order');
 const OrderReview = require('../models/OrderReview');
+const SpecialOffer = require('../models/SpecialOffer');
 
 const { sendMailToCustomer } = require('../middleware/nodemailer');
 
@@ -122,7 +123,15 @@ exports.getRestaurant = async (req, res) => {
 
 		const menus = [...new Set(products.map((product) => product.menu.name))];
 
-		res.render('./customer/restaurant', { restaurant, products, user, menus });
+		const specialOffers = await SpecialOffer.find(
+			{ restaurant: restaurant._id, active: true },
+			'-__v -restaurant'
+		)
+			.populate('products', '__v')
+			.lean()
+			.exec();
+		
+		res.render('./customer/restaurant', { restaurant, products, user, menus, specialOffers });
 	} catch (err) {
 		console.log(err);
 		res.status(400).send(err);

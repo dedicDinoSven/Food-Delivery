@@ -1,50 +1,108 @@
-<div class="row mt-5">
-    <div class="col-md-6 m-auto">
-        <div class="card card-body">
-            <h1 class="text-center mb-3">
-                New Special Offer
-            </h1>
-            <form method="POST" action="/admin/addSpecialOffer/<%=restaurant._id%>" enctype="multipart/form-data">
-                <div class="form-group mb-2">
-                    <input type="text" id="offerName" name="offerName" class="form-control"
-                        placeholder="Enter Offer name" />
-                </div>
-                <div class="form-group mb-2">
-                    <textarea rows="3" id="offerDesc" name="offerDesc" class="form-control"
-                        placeholder="Enter Offer description"></textarea>
-                </div>
-                <div class="row mb-2">
-                    <div class="form-group col">
-                        <input type="text" id="offerDateFrom" name="offerDateFrom" class="form-control"
-                            placeholder="Valid from (Date)" onfocus="this.type='date'" />
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Fontawesome -->
+    <script src="https://kit.fontawesome.com/667f2140fc.js" crossorigin="anonymous"></script>
+    <!-- Bootswatch template for Bootstrap -->
+    <link rel="stylesheet" href="https://bootswatch.com/5/sandstone/bootstrap.min.css" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Notify.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+
+    <title>Food Delivery - New Special Offer %>
+    </title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin/dashboard">Food Delivery</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/dashboard">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/orders">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chat">Chat</a>
+                    </li>
+                </ul>
+                <a class="nav-link" style="color: white;" href="/logout">
+                    Sign out </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="row mt-5">
+        <div class="col-md-6 m-auto">
+            <div class="card card-body">
+                <h1 class="text-center mb-3">
+                    New Special Offer
+                </h1>
+                <form method="POST" action="/admin/addSpecialOffer/<%=restaurant._id%>" enctype="multipart/form-data">
+                    <div class="form-group mb-2">
+                        <input type="text" id="offerName" name="offerName" class="form-control"
+                            placeholder="Enter Offer name" />
                     </div>
-                    <div class="form-group col">
-                        <input type="text" id="offerDateTo" name="offerDateTo" class="form-control"
-                            placeholder="Valid to (Date)" onfocus="this.type='date'" />
+                    <div class="form-group mb-2">
+                        <textarea rows="3" id="offerDesc" name="offerDesc" class="form-control"
+                            placeholder="Enter Offer description"></textarea>
                     </div>
-                </div>
-                <div class="mb-2 row">
-                    <div class="form-group col">
-                        <input type="text" id="offerTimeFrom" name="offerTimeFrom" class="form-control"
-                            placeholder="Valid from (Hours)" onfocus="this.type='time'" />
+                    <div class="row mb-2">
+                        <div class="form-group col">
+                            <input type="text" id="offerDateFrom" name="offerDateFrom" class="form-control"
+                                placeholder="Valid from (Date)" onfocus="this.type='date'" />
+                        </div>
+                        <div class="form-group col">
+                            <input type="text" id="offerDateTo" name="offerDateTo" class="form-control"
+                                placeholder="Valid to (Date)" onfocus="this.type='date'" />
+                        </div>
                     </div>
-                    <div class="form-group col">
-                        <input type="text" id="offerTimeTo" name="offerTimeTo" class="form-control"
-                            placeholder="Valid to (Hours)" onfocus="this.type='time'" />
+                    <div class="mb-2 row">
+                        <div class="form-group col">
+                            <input type="text" id="offerTimeFrom" name="offerTimeFrom" class="form-control"
+                                placeholder="Valid from (Hours)" onfocus="this.type='time'" />
+                        </div>
+                        <div class="form-group col">
+                            <input type="text" id="offerTimeTo" name="offerTimeTo" class="form-control"
+                                placeholder="Valid to (Hours)" onfocus="this.type='time'" />
+                        </div>
                     </div>
-                </div>
-                <div class="mb-2 row">
-                    <div class="form-group col">
-                        <input type="text" id="offerPrice" name="offerPrice" class="form-control"
-                            placeholder="Enter Offer price (BAM)" />
+                    <div class="mb-2 row">
+                        <div class="form-group col">
+                            <input type="text" id="offerPrice" name="offerPrice" class="form-control"
+                                placeholder="Enter Offer price (BAM)" />
+                        </div>
+                        <div class="form-group col">
+                            <input type="file" accept="image/*" id="offerPhoto" name="offerPhoto" class=" form-control"
+                                placeholder="Add Offer photo" />
+                        </div>
                     </div>
-                    <div class="form-group col">
-                        <input type="file" accept="image/*" id="offerPhoto" name="offerPhoto" class=" form-control"
-                            placeholder="Add Offer photo" />
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
-            </form>
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+
+    <!-- Bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/admin.js"></script>
+
+</body>
+
+</html>

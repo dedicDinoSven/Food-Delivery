@@ -1,21 +1,78 @@
-<link rel="stylesheet" href="../stylesheets/style.css">
-<div class="chat-container">
-    <header class="chat-header">
-        <h1><i class="fas fa-smile"></i> Chat</h1>
-        <a href="../<%=type%>/dashboard" class="btn">Leave Room</a>
-    </header>
-    <main class="chat-main">
-        <div class="chat-messages">
-        </div>
-    </main>
-    <div class="chat-form-container">
-        <form id="chat-form">
-            <input id="msg" type="text" placeholder="Enter Message" required autocomplete="off" />
-            <button class="btn"><i class="fas fa-paper-plane"></i> Send</button>
-        </form>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
 
-<script src="/socket.io/socket.io.js"></script>
-<script>const user = JSON.parse('<%- JSON.stringify(user) %>');</script>
-<script src="../javascripts/chat.js"></script>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Fontawesome -->
+    <script src="https://kit.fontawesome.com/667f2140fc.js" crossorigin="anonymous"></script>
+    <!-- Bootswatch template for Bootstrap -->
+    <link rel="stylesheet" href="https://bootswatch.com/5/sandstone/bootstrap.min.css" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="../stylesheets/chat.css">
+    <title>Food Delivery - Chat</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <% if (user.userType.name==='SuperAdmin' ) { %>
+                <a class="navbar-brand" href="/superadmin/dashboard">Food Delivery</a>
+                <% } %>
+                    <% if (user.userType.name==='Admin' ) { %>
+                        <a class="navbar-brand" href="/admin/dashboard">Food Delivery</a>
+                        <% } %>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarText">
+                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                    <li class="nav-item">
+                                        <% if (user.userType.name==='SuperAdmin' ) { %>
+                                            <a class="nav-link" href="/superadmin/dashboard">Home</a>
+                                            <% } %>
+                                                <% if (user.userType.name==='Admin' ) { %>
+                                                    <a class="nav-link" href="/admin/dashboard">Home</a>
+                                                    <% } %>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="/chat">Chat</a>
+                                    </li>
+                                </ul>
+                                <a class="nav-link" style="color: white;" href="/logout">
+                                    Sign out </a>
+                            </div>
+        </div>
+    </nav>
+    <div class="container chat-container mt-3">
+        <header class="chat-header bg-primary text-white">
+            <h1>Chat</h1>
+        </header>
+        <main class="chat-main" style="border: 1px solid black;">
+            <div class="chat-messages">
+            </div>
+        </main>
+        <div class="chat-form-container bg-primary" style="padding: 20px 30px;">
+            <form id="chat-form" style="display: flex;">
+                <input id="msg" type="text" placeholder="Enter Message" required />
+                <button class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send</button>
+            </form>
+        </div>
+    </div>
+    <!-- // chat-messages, chat-form, msg -->
+
+    <!-- Bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>const user = JSON.parse('<%- JSON.stringify(user) %>');</script>
+    <script src="../javascripts/chat.js"></script>
+</body>
+
+</html>

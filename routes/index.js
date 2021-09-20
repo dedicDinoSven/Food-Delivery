@@ -8,15 +8,13 @@ const {
 const passport = require('passport');
 const access = require('../middleware/access');
 
-router.get('/', index.getWelcome);
+router.get('/', index.getLogin);
+
+router.post('/', loginValidator, index.postLogin);
 
 router.get('/register', index.getRegister);
 
 router.post('/register', registrationValidator, index.postRegister);
-
-router.get('/login', index.getLogin);
-
-router.post('/login', loginValidator, index.postLogin);
 
 router.post('/setLocation/:id', index.setLocation);
 

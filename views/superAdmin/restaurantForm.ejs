@@ -1,22 +1,69 @@
-<style>
-	.mapboxgl-ctrl-geocoder {
-		width: 100% !important;
-		max-width: 600px !important;
-		box-shadow: none !important;
-	}
+<!DOCTYPE html>
+<html lang="en">
 
-	.form-control {
-		border: 1px solid #ced4da !important;
-	}
-</style>
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<div class="row mt-5">
-	<div class="col-md-7 m-auto">
-		<div class="card card-body">
-			<h1 class="text-center mb-3">
-				<i class="fas fa-utensils"></i> New Restaurant
-			</h1>
-			<% include ../partials/messages %>
+	<!-- Fontawesome -->
+	<script src="https://kit.fontawesome.com/667f2140fc.js" crossorigin="anonymous"></script>
+	<!-- Bootswatch template for Bootstrap -->
+	<link rel="stylesheet" href="https://bootswatch.com/5/sandstone/bootstrap.min.css" crossorigin="anonymous" />
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<!-- Notify.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+	<!-- Mapbox -->
+	<script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+	<link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+
+	<title>Food Delivery - New Restaurant</title>
+
+	<style>
+		.mapboxgl-ctrl-geocoder {
+			width: 100% !important;
+			max-width: 600px !important;
+			box-shadow: none !important;
+		}
+
+		.form-control {
+			border: 1px solid #ced4da !important;
+		}
+	</style>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/superadmin/dashboard">Food Delivery</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+				aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link" href="/superadmin/dashboard">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#" id="emailReport">Email report</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/chat">Chat</a>
+					</li>
+				</ul>
+				<a class="nav-link" style="color: white;" href="/logout">
+					Sign out </a>
+			</div>
+		</div>
+	</nav>
+	<div class="row mt-5">
+		<div class="col-md-7 m-auto">
+			<div class="card card-body">
+				<h1 class="text-center mb-3">
+					<i class="fas fa-utensils"></i> New Restaurant
+				</h1>
 				<form action="/superAdmin/addRestaurant" method="POST">
 					<div class="form-group mb-2">
 						<input type="text" id="name" name="name" class="form-control"
@@ -65,10 +112,30 @@
 						</button>
 					</div>
 				</form>
+
+			</div>
 		</div>
 	</div>
-</div>
 
-<script src="/javascripts/geocode.js">
-	formMap.setCenter([lng, lat]);
-</script>
+	<!-- Bootstrap JS-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+		crossorigin="anonymous"></script>
+
+	<!-- Mapbox Geocoder-->
+	<script
+		src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+	<link rel="stylesheet"
+		href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+		type="text/css">
+	<!-- Mapbox SDK for reverse Geocode -->
+	<script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+
+	<script src="/javascripts/geocode.js">
+		formMap.setCenter([lng, lat]);
+	</script>
+	<script src="/javascripts/superAdmin.js"></script>
+
+</body>
+
+</html>

@@ -1,67 +1,122 @@
-<h2 class="mt-5 mb-2">Order</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Full price</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <% order.forEach(orderProduct=> { %>
-            <tr>
-                <td>
-                    <%= orderProduct.product.name %>
-                </td>
-                <td>
-                    <%= orderProduct.price %> KM
-                </td>
-                <td>
-                    <%= orderProduct.quantity %>
-                </td>
-                <td>
-                    <%= orderProduct.fullPrice %> KM
-                </td>
-                <td><button class="btn removeFromBasket" data-id="<%= orderProduct._id %>">
-                        <i class="fas fa-trash-alt fa-lg" style="color: #ea1601"></i>
-                    </button></td>
-            </tr>
-            <% }) %>
-    </tbody>
-</table>
-<h3 id="total">Total:</h3>
-<form action="/customer/order" method="POST">
-    <div class="form-group mb-2">
-        <textarea class="form-control" id="comment" name="comment" rows="3"
-            placeholder="If you have any additional requirements enter them here."></textarea>
-    </div>
-    <div class="form-group mb-2">
-        <input type="text" id="orderTime" name="orderTime" class="form-control"
-            placeholder="When you want your order to be delivered? (If not specified, it will be ordered in one hour)"
-            onfocus="this.type='time'" />
-    </div>
-    <div class="form-group mb-2">
-        <select class="form-select" id="paymentType" name="paymentType">
-            <option disabled selected hidden>Select Payment type
-            </option>
-            <% paymentTypes.forEach(type=> { %>
-                <option>
-                    <%= type.name %>
-                </option>
-                <% }) %>
-        </select>
-    </div>
-    <input type="text" id="restaurant" name="restaurant" style="display: none;">
-    <input type="text" id="toPay" name="toPay" style="display: none;">
-    <input type="submit" id="submitOrder" class="btn btn-success" value="Submit">
-</form>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    let order = JSON.parse('<%- JSON.stringify(order) %>');
-    let customer = JSON.parse('<%- JSON.stringify(user.fullName) %>');
+<!DOCTYPE html>
+<html lang="en">
 
-    const socket = io();
-</script>
-<script src="/javascripts/customerBasket.js"></script>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Fontawesome -->
+    <script src="https://kit.fontawesome.com/667f2140fc.js" crossorigin="anonymous"></script>
+    <!-- Bootswatch template for Bootstrap -->
+    <link rel="stylesheet" href="https://bootswatch.com/5/sandstone/bootstrap.min.css" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Food Delivery - Basket
+    </title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/customer/dashboard">Food Delivery</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/customer/dashboard">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/customer/basket">Basket</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/customer/orders">My
+                            orders</a>
+                    </li>
+                </ul>
+                <a class="nav-link" style="color: white;" href="/logout">
+                    Sign out </a>
+            </div>
+        </div>
+    </nav>
+    <div class="container text-center">
+        <h2 class="mt-5 mb-2">Order</h2>
+        <table class="table table-striped table-bordered border-dark table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Full price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% order.forEach(orderProduct=> { %>
+                    <tr>
+                        <td>
+                            <%= orderProduct.product.name %>
+                        </td>
+                        <td>
+                            <%= orderProduct.price %> KM
+                        </td>
+                        <td>
+                            <%= orderProduct.quantity %>
+                        </td>
+                        <td>
+                            <%= orderProduct.fullPrice %> KM
+                        </td>
+                        <td><button class="btn removeFromBasket" data-id="<%= orderProduct._id %>">
+                                <i class="fas fa-trash-alt fa-lg" style="color: #ea1601"></i>
+                            </button></td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+        <h3 id="total">Total:</h3>
+        <form action="/customer/order" method="POST">
+            <div class="form-group mb-2">
+                <textarea class="form-control" id="comment" name="comment" rows="3"
+                    placeholder="If you have any additional requirements enter them here."></textarea>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" id="orderTime" name="orderTime" class="form-control"
+                    placeholder="When you want your order to be delivered? (If not specified, it will be ordered in one hour)"
+                    onfocus="this.type='time'" />
+            </div>
+            <div class="form-group mb-2">
+                <select class="form-select" id="paymentType" name="paymentType">
+                    <option disabled selected hidden>Select Payment type
+                    </option>
+                    <% paymentTypes.forEach(type=> { %>
+                        <option>
+                            <%= type.name %>
+                        </option>
+                        <% }) %>
+                </select>
+            </div>
+            <input type="text" id="restaurant" name="restaurant" style="display: none;">
+            <input type="text" id="toPay" name="toPay" style="display: none;">
+            <input type="submit" id="submitOrder" class="btn btn-success w-100" value="Submit">
+        </form>
+    </div>
+
+    <!-- Bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let order = JSON.parse('<%- JSON.stringify(order) %>');
+        let customer = JSON.parse('<%- JSON.stringify(user.fullName) %>');
+
+        const socket = io();
+    </script>
+    <script src="/javascripts/customerBasket.js"></script>
+</body>
+
+</html>

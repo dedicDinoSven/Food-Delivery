@@ -1,0 +1,28 @@
+.chat-container {
+	overflow: hidden;
+}
+
+.chat-header {
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.chat-messages .message {
+	padding: 10px;
+	width: 30%;
+	height: auto;
+	margin: 15px;
+	border-radius: 5px;
+}
+
+.chat-form-container input[type='text'] {
+	font-size: 1rem;
+	padding: 5px;
+	height: 40px;
+	flex: 1;
+}
+

@@ -1,139 +1,211 @@
-<style>
-    .mapboxgl-ctrl-geocoder {
-        width: 100% !important;
-        max-width: 600px !important;
-        box-shadow: none !important;
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    .form-control {
-        border: 1px solid #ced4da !important;
-    }
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    .card-img-top {
-        width: 100%;
-        height: 15vw;
-        object-fit: cover;
-    }
-</style>
+    <!-- Fontawesome -->
+    <script src="https://kit.fontawesome.com/667f2140fc.js" crossorigin="anonymous"></script>
+    <!-- Bootswatch template for Bootstrap -->
+    <link rel="stylesheet" href="https://bootswatch.com/5/sandstone/bootstrap.min.css" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Mapbox -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <!-- Notify.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+    
+    <title>Food Delivery - <%= restaurant.name %>
+    </title>
 
-<div class="row mt-5">
-    <div class="col-md-6 m-auto">
-        <h2>Info</h2>
-        <ul class="list-group list-group-flush mb-2" id="<%= restaurant._id %>">
-            <li class="list-group-item"><strong>Name:</strong>
-                <span data-target="name">
-                    <%= restaurant.name %>
-                </span>
-            </li>
-            <li class="list-group-item"><strong>Type of restaurant:</strong>
-                <span data-target="restaurantType">
-                    <%= restaurant.restaurantType.name %>
-                </span>
-            </li>
-            <li class="list-group-item"><strong>Working hours:</strong>
-                <span data-target="workingHoursStart">
-                    <%= restaurant.workingHoursStart%>
-                </span> to <span data-target="workingHoursEnd">
-                    <%= restaurant.workingHoursEnd %>
-                </span>
-            </li>
-            <li class="list-group-item"><strong>Address:</strong>
-                <span data-target="address">
-                    <%= restaurant.location.address %>
-                </span>
-            </li>
-            <li class="list-group-item"><strong>Street number:</strong>
-                <span data-target="streetNum">
-                    <%= restaurant.location.streetNum%>
-                </span>
-            </li>
-            <% if (typeof restaurant.deliveryDistance !=='undefined' ) { %>
-                <li class="list-group-item"><strong>Delivery distance (kilometers):</strong>
-                    <span data-target="deliveryDistance">
-                        <%= restaurant.deliveryDistance %>
-                    </span>
-                </li>
-                <% } %>
-        </ul>
-        <div id="buttonContainer">
-            <button class="btn btn-primary mb-2" id="updateRestaurant" type="button" data-id="<%= restaurant._id %>"
-                data-bs-toggle="modal" data-bs-target="#updateRestaurantModal">Update info</button>
-            <button class="btn btn-primary mb-2" id="addProduct" type="button" data-bs-toggle="modal"
-                data-bs-target="#addProductModal">New product</button>
-            <a href="./addSpecialOffer/<%= restaurant._id %>" class="btn btn-primary mb-2 addSpecialOffer" type="button"
-                style="text-decoration: none;">New Special Offer</a>
-            <button class="btn btn-primary mb-2" id="emailReport" type="button" data-id="<%= restaurant._id %>">
-                Get email report
+    <style>
+        .mapboxgl-ctrl-geocoder {
+            width: 100% !important;
+            max-width: 600px !important;
+            box-shadow: none !important;
+        }
+
+        .form-control {
+            border: 1px solid #ced4da !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin/dashboard">Food Delivery</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/dashboard">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/orders">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="emailReport" data-id="<%= restaurant._id %>">Email report</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Add New
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" id="addProduct" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#addProductModal" href="#">Product</a>
+                            </li>
+                            <li><a class="dropdown-item addSpecialOffer" type="button"
+                                    href="./addSpecialOffer/<%= restaurant._id %>">Special Offer</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chat">Chat</a>
+                    </li>
+                </ul>
+                <a class="nav-link" style="color: white;" href="/logout">
+                    Sign out </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-6 m-auto">
+                <h2>Info</h2>
+                <ul class="list-group list-group-flush mb-2" id="<%= restaurant._id %>">
+                    <li class="list-group-item"><strong>Name:</strong>
+                        <span data-target="name">
+                            <%= restaurant.name %>
+                        </span>
+                    </li>
+                    <li class="list-group-item"><strong>Type of restaurant:</strong>
+                        <span data-target="restaurantType">
+                            <%= restaurant.restaurantType.name %>
+                        </span>
+                    </li>
+                    <li class="list-group-item"><strong>Working hours:</strong>
+                        <span data-target="workingHoursStart">
+                            <%= restaurant.workingHoursStart%>
+                        </span> to <span data-target="workingHoursEnd">
+                            <%= restaurant.workingHoursEnd %>
+                        </span>
+                    </li>
+                    <li class="list-group-item"><strong>Address:</strong>
+                        <span data-target="address">
+                            <%= restaurant.location.address %>
+                        </span>
+                    </li>
+                    <li class="list-group-item"><strong>Street number:</strong>
+                        <span data-target="streetNum">
+                            <%= restaurant.location.streetNum%>
+                        </span>
+                    </li>
+                    <% if (typeof restaurant.deliveryDistance !=='undefined' ) { %>
+                        <li class="list-group-item"><strong>Delivery distance (kilometers):</strong>
+                            <span data-target="deliveryDistance">
+                                <%= restaurant.deliveryDistance %>
+                            </span>
+                        </li>
+                        <% } %>
+                </ul>
+                <button class="btn btn-primary mb-2" id="updateRestaurant" type="button" data-id="<%= restaurant._id %>"
+                    data-bs-toggle="modal" data-bs-target="#updateRestaurantModal">Update info</button>
+            </div>
+            <div class=" col-md-6 m-auto">
+                <div id="map" style="width: 100%; height: 350px; border-radius: 5px;"></div>
+            </div>
+        </div>
+
+        <div id="products" class="row mt-5 mb-3">
+            <h1 class="text-center mb-2">Products</h1>
+            <% menus.forEach(menu=> { %>
+                <h3 class="text-center mb-1">
+                    <%= menu %>
+                </h3>
+                <div class="row row-cols-1 row-cols-md-3 gt-2 mb-2">
+                    <% products.forEach(product=> { %>
+                        <% if (product.menu.name===menu) { %>
+                            <div class="col mb-2">
+                                <div class="card h-100" id="<%= product._id %>">
+                                    <div class="card-header" style="display: none;">
+                                        <p data-target="menu">
+                                            <%= product.menu.name %>
+                                        </p>
+                                    </div>
+                                    <img src="<%= product.photoUrl %>" class="card-img-top"
+                                        style="width: 100%; height: 200px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <h5 class="card-title" data-target="productName">
+                                            <%= product.name %>
+                                        </h5>
+                                        <p class="card-subtitle text-muted">
+                                            <span data-target="productPrice">
+                                                <%= product.price %>
+                                            </span> KM
+                                        </p>
+                                        <p class="card-text" data-target="productDesc">
+                                            <%= product.description %>
+                                        </p>
+                                    </div>
+                                    <div class="card-footer text-center"
+                                        style="display: flex; justify-content: center; align-items: center;">
+                                        <button class="btn btn-primary me-2 updateProduct" type="button"
+                                            data-id="<%= product._id %>" data-bs-toggle="modal"
+                                            data-bs-target="#updateProductModal">Update</button>
+                                        <% if (product.active===true) { %>
+                                            <button class="btn btn-danger deactivateProduct"
+                                                data-id="<%= product._id %>">
+                                                Deactivate
+                                            </button>
+                                            <% } else { %>
+                                                <button class="btn btn-primary activateProduct"
+                                                    data-id="<%= product._id %>">
+                                                    Activate
+                                                </button>
+                                                <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                                <% }) %>
+                </div>
+                <% }) %>
         </div>
     </div>
-    <div class=" col-md-6 m-auto">
-        <div id="map" style="width: 100%; height: 350px; border-radius: 5px;"></div>
-    </div>
-</div>
-<div id="products" class="mt-5 mb-3">
-    <h1 class="text-center mb-2">Products</h1>
-    <% menus.forEach(menu=> { %>
-        <h3 class="text-center mt-2">
-            <%= menu %>
-        </h3>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <% products.forEach(product=> { %>
-                <% if (product.menu.name===menu) { %>
-                    <div class="col">
-                        <div class="card h-100" id="<%= product._id %>">
-                            <div class="card-header" style="display: none;">
-                                <p data-target="menu">
-                                    <%= product.menu.name %>
-                                </p>
-                            </div>
-                            <img src="<%= product.photoUrl %>" class="card-img-top"
-                                style="width: 100%; height: 200px; object-fit: cover;">
-                            <div class="card-body">
-                                <h5 class="card-title" data-target="productName">
-                                    <%= product.name %>
-                                </h5>
-                                <p class="card-subtitle text-muted">
-                                    <span data-target="productPrice">
-                                        <%= product.price %>
-                                    </span> KM
-                                </p>
-                                <p class="card-text" data-target="productDesc">
-                                    <%= product.description %>
-                                </p>
-                            </div>
-                            <div class="card-footer text-center"
-                                style="display: flex; justify-content: center; align-items: center;">
-                                <button class="btn btn-primary me-2 updateProduct" type="button"
-                                    data-id="<%= product._id %>" data-bs-toggle="modal"
-                                    data-bs-target="#updateProductModal">Update</button>
-                                <% if (product.active===true) { %>
-                                    <button class="btn btn-danger deactivateProduct" data-id="<%= product._id %>">
-                                        Deactivate
-                                    </button>
-                                    <% } else { %>
-                                        <button class="btn btn-primary activateProduct" data-id="<%= product._id %>">
-                                            Activate
-                                        </button>
-                                        <% } %>
-                            </div>
-                        </div>
-                    </div>
-                    <% } %>
-                        <% }) %>
-        </div>
-        <% }) %>
-</div>
 
-<% include ./updateRestaurantForm %>
-    <% include ./addProductForm %>
-        <% include ./updateProductForm %>
+    <% include ./updateRestaurantForm %>
+        <% include ./addProductForm %>
+            <% include ./updateProductForm %>
 
-            <script>
-                let lng = JSON.parse('<%- JSON.stringify(restaurant.location.lng) %>');
-                let lat = JSON.parse('<%- JSON.stringify(restaurant.location.lat) %>');
-            </script>
-            <script src="/javascripts/geocode.js"></script>
-            <script src="/javascripts/initializeMap.js"></script>
-            <script src="/socket.io/socket.io.js"></script>
-            <script src="/javascripts/admin.js"></script>
+                <!-- Bootstrap JS-->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+                    crossorigin="anonymous"></script>
+
+                <!-- Mapbox Geocoder-->
+                <script
+                    src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+                <link rel="stylesheet"
+                    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+                    type="text/css">
+                <!-- Mapbox SDK for reverse Geocode -->
+                <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+                <script>
+                    let lng = JSON.parse('<%- JSON.stringify(restaurant.location.lng) %>');
+                    let lat = JSON.parse('<%- JSON.stringify(restaurant.location.lat) %>');
+                </script>
+                <script src="/javascripts/geocode.js"></script>
+                <script src="/javascripts/initializeMap.js"></script>
+                <script src="/socket.io/socket.io.js"></script>
+                <script src="/javascripts/admin.js"></script>
+</body>
+
+</html>

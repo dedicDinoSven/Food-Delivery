@@ -146,3 +146,13 @@ $('.activateRestaurant').click(function () {
 	});
 });
 
+$('#emailReport').click(function () {
+	$.ajax({
+		url: `/superadmin/report`,
+		type: 'post',
+		success: function (data) {
+			location.reload();
+		}
+	});
+});
+

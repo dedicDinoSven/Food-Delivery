@@ -35,16 +35,24 @@ exports.getAdminDashboard = async (req, res) => {
 			.lean()
 			.exec();
 
+		const specialOffers = await SpecialOffer.find(
+			{ restaurant: restaurant._id, active: true },
+			'-__v -restaurant'
+		)
+			.lean()
+			.exec();
+
 		const menus = [...new Set(products.map((product) => product.menu.name))];
 		console.log(menus);
-		
+
 		res.render('./admin/dashboard', {
 			restaurant,
 			restaurantTypes,
 			menuTypes,
 			products,
 			user,
-			menus
+			menus,
+			specialOffers
 		});
 	} catch (err) {
 		res.status(404).send(err);
@@ -273,8 +281,8 @@ exports.postAddProductToOffer = async (req, res) => {
 exports.emailReport = async (req, res) => {
 	try {
 		const restaurantId = new mongoose.Types.ObjectId(req.params.id);
-		const startDate = new Date(2021, 7, 1);
-		const endDate = new Date(2021, 7, 31);
+		const startDate = new Date(2021, 8, 1);
+		const endDate = new Date(2021, 8, 31);
 
 		const monthsAggregation = await Order.aggregate([
 			{
@@ -326,28 +334,7 @@ exports.emailReport = async (req, res) => {
 			{ $sort: { ordersByDay: 1 } }
 		]);
 
-		const orderStatus = await OrderStatus.findOne({ name: 'Delivered' })
-			.lean()
-			.exec();
-
-		//TODO: update after creating 1-n relationship restaurant-courier
-		const courierDelivered = await Order.countDocuments({
-			restaurant: req.params.id,
-			orderDate: {
-				$gte: startDate,
-				$lte: endDate
-			},
-			orderStatus: orderStatus._id
-		})
-			.lean()
-			.exec();
-
-		sendMailToAdmin(
-			req.user.email,
-			daysAggregation[0],
-			monthsAggregation,
-			courierDelivered
-		);
+		sendMailToAdmin(req.user.email, daysAggregation[0], monthsAggregation);
 
 		res.redirect(303, 'back');
 	} catch (err) {

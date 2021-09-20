@@ -2,9 +2,6 @@ const socket = io();
 const chatMessages = $('.chat-messages');
 const chatForm = $('#chat-form');
 const messageInput = $('#msg');
-const roomName = $('#room-name');
-const userList = $('#users');
-
 const botName = 'Server';
 
 socket.emit('new-user', user.fullName);
@@ -38,7 +35,7 @@ chatForm.on('submit', (e) => {
 
 const appendMessage = (message) => {
 	const messageElement = $('<div></div>')
-		.addClass('message')
+		.addClass('message bg-dark text-white')
 		.html(message)
 		.appendTo(chatMessages);
 };

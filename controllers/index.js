@@ -6,10 +6,6 @@ const UserType = require('../models/UserType');
 const Location = require('../models/Location').Location;
 const User = require('../models/User');
 
-exports.getWelcome = (req, res) => {
-	res.render('welcome');
-};
-
 exports.getRegister = async (req, res) => {
 	res.render('register');
 };
@@ -55,7 +51,7 @@ exports.postRegister = async (req, res, next) => {
 				}
 
 				req.flash('success_msg', info.msg);
-				return res.redirect('/login');
+				return res.redirect('/');
 			} catch (err) {
 				return next(err);
 			}
@@ -152,7 +148,7 @@ exports.getLogout = (req, res) => {
 	req.logout();
 	req.flash('success_msg', 'Logged out successfully');
 	res.clearCookie('jwt');
-	res.redirect('/login');
+	res.redirect('/');
 };
 
 exports.getChat = async (req, res) => {

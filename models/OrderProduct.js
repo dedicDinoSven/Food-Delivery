@@ -9,7 +9,6 @@ const OrderProductSchema = new Schema({
 	product: {
 		type: Schema.Types.ObjectId,
 		ref: 'Product',
-		required: true
 	},
 	offer: {
 		type: Schema.Types.ObjectId,
